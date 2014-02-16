@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ariesmcrae.eskwela.danger"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="13"
+        android:targetSdkVersion="18" />
+
+	<permission android:name="com.ariesmcrae.eskwela.permission.DANGEROUS_ACTIVITY_PERM"
+        android:label="@string/app_name"
+        android:description="@string/hello_world"
+        android:protectionLevel="dangerous" /> 
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" 
+        android:permission="com.ariesmcrae.eskwela.permission.DANGEROUS_ACTIVITY_PERM">
+
+        <activity
+            android:name="com.ariesmcrae.eskwela.danger.DangerousActivity"
+            android:label="@string/app_name" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="com.ariesmcrae.eskwela.permission.DANGEROUS_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

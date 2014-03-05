@@ -60,7 +60,7 @@ public class BubbleActivity extends Activity {
 	private static final int MENU_SINGLE_SPEED = Menu.FIRST + 1;
 	private static final int MENU_RANDOM_SPEED = Menu.FIRST + 2;
 
-//	private static final String TAG = "AndroidEskwela-Bubbles";
+//	private static final String TAG = "eskwela-Bubbles";
 
 	// Main view
 	private RelativeLayout mFrame;
@@ -281,10 +281,12 @@ public class BubbleActivity extends Activity {
 
 		
 		
-		private void setRotation(Random r) {
+		private void setRotation(Random random) {
 			if (speedMode == RANDOM) {
-				// Generates a random number between 1 to 3. Plus one because nextInt(3) will generate a random number between 0 and 3. We only want between 1 to 3.
-				mDRotate = r.nextInt(3) + 1;
+				// Generates a random number between -3 to 3.
+				int LOW = -3;
+				int HIGH = 3;
+				mDRotate = generateRandomNumberInRange(random, LOW, HIGH);
 			} else {
 				mDRotate = 0;
 			}
@@ -294,7 +296,7 @@ public class BubbleActivity extends Activity {
 
 		
 		// Used by test cases		
-		private void setSpeedAndDirection(Random r) {
+		private void setSpeedAndDirection(Random random) {
 			switch (speedMode) {
 				case SINGLE:
 					// Fixed speed
@@ -309,9 +311,9 @@ public class BubbleActivity extends Activity {
 				default:
 					// Limit movement speed in the x and y direction to [-3..3].
 					int LOW = -3;
-					int HIGH = 4;
-					int randomNoBetweenMinusThreeAndThreeXAxis = r.nextInt(HIGH - LOW) + LOW;
-					int randomNoBetweenMinusThreeAndThreeYAxis = r.nextInt(HIGH - LOW) + LOW;
+					int HIGH = 3;
+					int randomNoBetweenMinusThreeAndThreeXAxis = generateRandomNumberInRange(random, LOW, HIGH);
+					int randomNoBetweenMinusThreeAndThreeYAxis = generateRandomNumberInRange(random, LOW, HIGH);
 					mDx = randomNoBetweenMinusThreeAndThreeXAxis;
 					mDy = randomNoBetweenMinusThreeAndThreeYAxis;
 			}
@@ -321,19 +323,23 @@ public class BubbleActivity extends Activity {
 
 		
 		
-		private void createScaledBitmap(Random r) {
+		private void createScaledBitmap(Random random) {
 			if (speedMode != RANDOM) {
 				mScaledBitmapWidth = BITMAP_SIZE * 3;
 			} else {
-				// Set scaled bitmap size in range [1..3] * BITMAP_SIZE
-				int randomNumberBetweenOneAndThree = r.nextInt(3) +1; //Plus one because nextInt(3) will generate a random number between 0 and 3. We want between 1 to 3.
-				mScaledBitmapWidth = BITMAP_SIZE * randomNumberBetweenOneAndThree;
+				// Set scaled bitmap size in range [2..4] * BITMAP_SIZE
+				int LOW = 2;
+				int HIGH = 4;
+				mScaledBitmapWidth = BITMAP_SIZE * generateRandomNumberInRange(random, LOW, HIGH);
 			}
 
 			mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScaledBitmapWidth, mScaledBitmapWidth, false); //WTF? true or false?
 //			log("createScaledBitmap mScaledBitmapWidth=" + mScaledBitmapWidth);				
 		}
 
+		
+
+		
 		
 		
 		/** Start moving the BubbleView & updating the display **/
@@ -495,6 +501,13 @@ public class BubbleActivity extends Activity {
 		}
 	}
 
+	
+	private static int generateRandomNumberInRange(Random random, int low, int high) {
+		// Generate number between low and high.
+		// For example, if low = -3 and high = 4, 
+		// this will generate a random number between -3 and +4.
+		return random.nextInt(high - low + 1) + low;
+	}
 	
 	
 //	private static void log(String message) {

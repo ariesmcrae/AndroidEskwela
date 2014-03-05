@@ -21,7 +21,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  **/
-package com.ariesmcrae.androideskwela.celebtweet;
+package com.ariesmcrae.eskwela.celebtweet;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,7 +43,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
-import com.ariesmcrae.androideskwela.celebtweet.R;
+import com.ariesmcrae.eskwela.celebtweet.R;
 
 /** @author aries@ariesmcrae.com */
 public class DownloaderTask extends AsyncTask<String, Void, String[]> {

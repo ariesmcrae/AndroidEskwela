@@ -21,48 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  **/
-package com.ariesmcrae.androideskwela.celebtweet;
-
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import com.ariesmcrae.androideskwela.celebtweet.R;
+package com.ariesmcrae.eskwela.celebtweet;
 
 /** @author aries@ariesmcrae.com */
-public class FeedFragment extends Fragment {
-
-	private TextView mTextView;
-
-	
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.feed, container, false);
-	}
-	
-	
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mTextView = (TextView) getView().findViewById(R.id.feed_view);
-	}
-
-	
-	
-	void update(String feed) {
-		if (null != mTextView) {
-			mTextView.setText(feed);
-		}
-	}
+public interface SelectionListener {
+	public void onItemSelected(int position);
 }

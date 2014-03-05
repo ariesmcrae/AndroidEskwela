@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  **/
-package com.ariesmcrae.androideskwela.celebtweet;
+package com.ariesmcrae.eskwela.celebtweet;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -43,20 +43,20 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import com.ariesmcrae.androideskwela.celebtweet.R;
+import com.ariesmcrae.eskwela.celebtweet.R;
 
 /** @author aries@ariesmcrae.com */
 public class MainActivity extends Activity implements SelectionListener {
 
 	public static final String TWEET_FILENAME = "tweets.txt";
 	public static final String[] FRIENDS = { "taylorswift13", "msrebeccablack", "ladygaga" };
-	public static final String DATA_REFRESHED_ACTION = "com.ariesmcrae.androideskwela.celebtweet.DATA_REFRESHED";
+	public static final String DATA_REFRESHED_ACTION = "com.ariesmcrae.eskwela.celebtweet.DATA_REFRESHED";
 
 	private static final int NUM_FRIENDS = 3;
 	private static final String URL_LGAGA = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Fladygaga.txt";
 	private static final String URL_RBLACK = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Frebeccablack.txt";
 	private static final String URL_TSWIFT = "https://d396qusza40orc.cloudfront.net/android%2FLabs%2FUserNotifications%2Ftaylorswift.txt";
-	private static final String TAG = "AndroidEskwela-Notifications";
+	private static final String TAG = "eskwela-Notifications";
 	private static final long TWO_MIN = 2 * 60 * 1000;
 	private static final int UNSELECTED = -1;
 

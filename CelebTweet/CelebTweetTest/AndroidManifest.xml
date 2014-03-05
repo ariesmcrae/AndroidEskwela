@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ariesmcrae.androideskwela.celebtweet.test"
+    package="com.ariesmcrae.eskwela.celebtweet.test"
     android:versionCode="1"
     android:versionName="1.0" >
     
@@ -10,9 +10,9 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.ariesmcrae.androideskwela.celebtweet" />
+        android:targetPackage="com.ariesmcrae.eskwela.celebtweet" />
 
-    <application android:label="com.ariesmcrae.androideskwela.celebtweet.test" >
+    <application android:label="com.ariesmcrae.eskwela.celebtweet.test" >
         <uses-library android:name="android.test.runner" />
     </application>
  

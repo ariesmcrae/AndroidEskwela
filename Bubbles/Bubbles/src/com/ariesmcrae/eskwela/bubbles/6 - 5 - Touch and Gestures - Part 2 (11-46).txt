@@ -1,0 +1,283 @@
+[BLANK_AUDIO]
+Hi I'm Adam Porter and this is
+Programming Mobile Applications for
+Android Handheld Systems.
+Android provides a class called Gesture
+Detector, that
+applications can use to recognize common
+touch gestures.
+This class can recognize gestures, such as
+a confirmed single tap, a double tap.
+Which is essentially two single taps in
+rapid succession.
+And a fling.
+Which is a press, followed by a drag,
+and release motion that has a reasonably
+high velocity.
+To use a gesture detector, your activity
+will have to create an instance of the
+GestureDetector class and will have to
+give it an object that implements the
+GestureDetector.OnGestureListener
+interface.
+And then the activity will need to
+override it's onTouchEvent method, which
+is the method that gets called when the
+activity receives a touch event.
+And this method will then delegate the
+motion event to the gesture detectors
+onTouchEvent method.
+Let's look at an example application that
+uses
+a gesture detector to recognize a fling
+gesture.
+This application is called
+TouchGestureViewFlipper and when it
+starts,
+it presents a text view that displays a
+number.
+If the user performs a right to left fling
+gesture, then
+the text view will scroll off the left
+side of the screen.
+And while
+it does it, a new text view, displaying a
+new number
+will scroll in behind it, from the right.
+Let's see that application in action.
+So here's my device.
+Now I'll start up the touch gesture, view
+flipper application.
+When it starts up, the screen shows a text
+view displaying the number zero.
+Now, if I perform a fling gesture that is
+if I press and hold the view.
+And then quickly swipe towards the left
+side of the screen and finally lift
+my finger off the screen.
+Then we'll see the animation that I
+mentioned earlier.
+Let me do that now.
+And as you can see the text view with the
+number zero slid off the screen.
+Going towards the left, and the new text
+view, displaying
+the number 1, slid into the screen from
+the right.
+Let
+me do that a few more times.
+And
+notice that this gesture only works if I
+swipe from right to left.
+If I try it in the other direction,
+nothing will happen.
+Let's take a look at the source code for
+this application.
+So
+here's the application open in the IDE.
+Now, I'll open the main activity.
+First of all, this application uses the
+view flipper class to handle the
+animations.
+Now I won't go into that much here, but
+feel
+free to study the code, after we finish
+the segment.
+For now, let's focus on how this
+application detects the fling gesture.
+So, in on create, you can see that the
+code creates a new gesture detector.
+And in the constructor for this object,
+the
+code passes in a new simple on gesture
+listener.
+And this object defines an on fling
+method.
+When a GestureDetector detects a fling
+gesture, this method will be called.
+And we'll
+come back to that, to this method in a few
+seconds.
+Right now, let's look at the OnTouch event
+method for this activity.
+This method gets called when a touch event
+occurs.
+And no view in the activity handles it.
+When this method is called, it will
+simply delegate the call, to the gesture
+detector,
+if the gesture detector eventually decides
+that it has seen a complete fling gesture.
+The on fling method that I just showed you
+will be called.
+And this on fling method receives a
+parameter.
+In this case, it's called velocity x, that
+tells how
+fast, and in which direction the swipe
+gesture was performed.
+In this example, if the swipe was moving
+from right to left, at a speed of
+more than ten pixels per second, then the
+code invokes a method called switch layout
+state two.
+Which causes the animation of the text
+views to start.
+If the velocity does not meet that
+criteria, for
+instance, if it's a slow drag instead of a
+fling,
+or if it's traveling in the wrong
+direction, left to right,
+instead of right to left, then the fling
+gesture is ignored.
+To recognize more complex gestures, you
+can use Android's
+Gesture Builder application to create and
+then save custom gestures.
+This application comes bundled with the
+SDK.
+At runtime, you can use the gesture
+libraries class to load your custom
+gestures and to recognize when a user
+performs one of those gestures.
+To make this work, you include a
+GestureOverlayView in your application.
+And this view essentially intercepts user
+gestures.
+And then, it invokes your application code
+to handle those gestures.
+Here's a screenshot of the gesture builder
+application.
+As you can see, I've created four custom
+gestures.
+Next, which is a horizontal swipe, from
+left to right,
+no, which looks a bit like an, an X that
+you make using a single stroke.
+Prev, or previous, which is a horizontal
+swipe from right to left, and yes,
+which looks like a check mark.
+On the emulator, GestureBuilder saves your
+custom gestures to a file
+called /mnt/sdcard/gestures.
+To use these gestures you'll need to copy
+this file into your applications
+/res/raw directory.
+Let's
+look at the TouchGestures application.
+This application
+displays a small view with a
+candidate color for the entire
+applications background.
+The background color for the whole
+application
+is initially set to gray, and the user
+can use these four custom gestures that
+I showed earlier to interact with this
+application.
+For example, if the user performs the
+next gesture the background color will
+cycle forward.
+If the user
+performs the previous gesture, the
+background color cycles back.
+If the user performs the yes gesture, the
+application
+sets the whole application's background to
+the current color.
+And if the user performs the no gesture,
+the application's background color is
+reset to gray.
+Let's see the running application.
+So here's my device.
+Now
+I'll start up the TouchGestures
+application.
+And when it starts up, the application's
+background is generally gray.
+But there's a colored square in the middle
+of the screen.
+If I swipe the screen from left to right.
+The color of that square in the middle
+changes.
+And if I do it again, the color changes
+again.
+And I can go back to the previous color,
+by swiping,
+this time, from right to left, instead of
+left to right.
+If I decide that I like the current color,
+I can perform the yes gesture.
+Like so.
+And as you see the whole application now
+has a background of that color,
+but if I change my mind I can perform the
+no gesture, like so.
+And as you can see, the application's
+background goes back to its initial grey.
+The color square reappears in the middle
+of the layout and
+I can keep this issuing gestures to look
+at new candidate colors.
+Let's
+take a look at the source code for this
+application.
+Here's the application open in the IDE and
+now I'll open the main activity.
+And you notice that this activity
+implements the on gesture performed
+listener interface, which means that it
+provides an on gesture performed method.
+In on create, the code gets a reference to
+the
+frame layout, which it stores in a
+variable called m frame.
+And this is where the candidate background
+colors appear.
+The code also gets a reference to a
+relative
+layout, which it stores in a variable
+called m layout.
+And this is the layout for the entire
+application.
+Now here's the code that reads the
+gestures file from the res/ raw directory.
+Using the gesture libraries from raw
+resource method.
+This method returns a gesture library
+object, and the code then
+goes on to call the load method for the
+gesture library.
+After that, the code finds the gesture
+overlay view.
+Which is in the layout, and adds the
+current activity as a listener
+for gestures that are intercepted by the
+gesture overlay view.
+When the gesture overlay view detects a
+gesture, it calls the onGesturePerformed
+method, shown here.
+And this method first calls the recognize
+method, which analyzes the detected
+gesture, and then scores each custom
+gesture as to how much the detected
+gesture resembles the custom gestures
+recorded in the gesture file.
+And next the code gets the highest ranked
+prediction.
+And then if that prediction has a high
+enough score, the
+code carries out the action that is
+associated with that gesture.
+For example, if the gesture was the yes
+gesture, then the
+code sets the layout's background color to
+the current candidate color.
+[BLANK_AUDIO]
+So that's all for our lesson on
+multi-touch, and gestures.
+Please join me next time, when we'll
+discuss multimedia.
+Thanks.
+

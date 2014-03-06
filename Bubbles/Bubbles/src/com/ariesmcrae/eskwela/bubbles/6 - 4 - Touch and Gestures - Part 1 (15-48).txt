@@ -1,0 +1,370 @@
+[BLANK_AUDIO]
+Hi, I'm Adam Porter, and this is
+Programming Mobile Applications for
+Android Handheld Systems.
+If you use common applications that
+display maps or web pages, then
+you've probably used gestures like swiping
+to scroll a view, or
+inching and un-pinching your thumb and
+index finger to zoom in or zoom out.
+In this lesson, I'll start by discussing
+MotionEvents.
+Android uses this class to represent the
+movement in various input devices.
+Things like a mouse, a trackball, and most
+common of all, your finger.
+Next I'll discuss how Android takes these
+motion events and delivers
+them to views and other objects, so that
+your application can
+respond to them.
+And finally, I'll finish up with
+a discussion of how Android recognizes
+complex
+movement patterns or gestures, things like
+the
+pinch to zoom that I mentioned earlier.
+Android uses the MotionEvent class to
+represent movements in an input device.
+Such as a pen, a trackball, a mouse or
+your finger.
+An individual movement event contains
+several pieces of information.
+It has an action code, which indicates the
+kind of motion that has occurred.
+It also contains a variety of data
+associated with that motion.
+For instance, it has information about the
+time at which the
+event occurred, which device the event
+came from, the event's location.
+And if appropriate, how hard the device
+was pressed and more.
+And as I just said, this information will
+vary depending on the kind of input device
+involved.
+In the rest of this lesson, I'll focus
+particularly on finger touch events
+that are read by pressing a touch screen.
+Many touch screen devices today are multi
+touch devices.
+That means that they can register and
+track multiple touches all the same time
+In Android, multi touch devices emit one
+movement trace per touch source.
+And each of these touch sources is
+referred to
+as a pointer.
+When Android encounters a new pointer, it
+generates a unique
+ID that will remain constant for as long
+as that pointer is active.
+In some cases, Android will group multiple
+pointers within a single motion event.
+And in that case, each pointer within the
+motion event can be accessed by its index.
+But be aware, that that index is not
+the same as the pointer's ID.
+The pointer ID is constant for as long as
+the pointer is active.
+The index in which a pointer's data is
+stored however may not be.
+So let's talk about Motion Events in more
+detail.
+Now as I said earlier Motion Events have
+an action code.
+When a gesture begins,
+motion events will be created, and they
+will contain some of the following action
+codes.
+ACTION_DOWN, which indicates that a first
+finger
+has been, has started touching the screen.
+ACTION_POINTER_DOWN, that means that we've
+already had an ACTION_DOWN,
+and now we have another finger that has
+started touching the screen.
+ACTION_POINTER_UP.
+We've had an ACTION_POINTER and an
+ACTION_POINTER_DOWN, and now
+one of the fingers has stopped touching
+the screen.
+ACTION_MOVE.
+Some of the fingers that are touching the
+screen have changed their position.
+ACTION_UP.
+The last of the fingers that was touching
+the screen has now stopped touching it.
+And
+ACTION_CANCEL.
+Something has prematurely canceled the
+current gesture.
+While the gesture is playing out Android
+will try
+to ensure that it's motion events obey the
+following rules.
+Touches will go down one at a time.
+They will move as a group.
+So a single motion event can refer to
+multiple pointers, and
+they will come up one at a time or be
+cancelled.
+When you need to process motion events,
+you can
+use some of the following methods,
+getActionMasked which returns the
+action code associated with the motion
+event getActionIndex,
+which returns the index of the pointer
+associated with this action code.
+For example, if the action code is action
+pointer down then you can use
+this method to find the index of the
+particular pointer that is just
+touched down, getPointerId.
+Given
+an index, this method returns the stable
+ID of the pointer
+associated with that index.
+GetPointerCount,
+which returns the number of pointers
+associated with the motion event.
+
+GetX and getY, which return the
+x and y coordinates of the pointer stored
+at the current index.
+And findPointerIndex, which returns the
+index associated with a given pointer ID.
+
+When a touch occurs on a view, Android
+generates a motion event, and then
+attempts to deliver that event to various
+objects, one of which is the view itself.
+Android delivers the motion event through
+the onTouchEvent method.
+This method can process the motion event,
+and should end,
+by returning true if the motion event has
+been consumed,
+and false if it is not.
+
+Objects interested in receiving motion
+events that occur
+on a given view, can register to receive
+those
+events by implementing the views on touch
+listener interface,
+and by registering the object with the
+view.setontouchlistener method.
+The listener's onTouch method will then be
+called when
+an event such as pressing, releasing, or
+dragging, occurs.
+And this method will be called before the
+touch
+to view gets a chance to handle that
+touch.
+And again, onTouch should return true if
+it consumes the motion event.
+Or false if it doesn't.
+In the simplest
+case, you can process each touch event
+independently.
+But applications often need or want to
+process multiple touches that are part
+of a more complex gesture.
+To do this, your code will
+need to identify and process particular
+combination
+of touches for example, a double touch
+will involve an ACTION_DOWN.
+And then and ACTION_UP and then another
+ACTION_DOWN
+and finally an ACTION_UP all in quick
+succession.
+To give some examples, suppose you start a
+gesture by placing one finger down on the
+screen.
+That will generate an ACTION_DOWN event.
+And might assign a pointer ID of zero for
+that pointer.
+If you keep that finger down and move it
+on the screen, you might get several
+action move events associated
+with pointer ID zero.
+Suppose now that
+you put a second finger down.
+In that case you'll get an action pointer
+down event, and this new pointer might get
+an ID, say of one.
+If you keep those fingers down and you
+move them, you might get then several
+action move events associated with the
+pointer IDs zero and one.
+And if you now lift the first finger, then
+you'll
+get an action pointer up event, associated
+with pointer zero.
+And then, if you finally lift the last
+finger, you'll get an action up event
+associated with pointer ID 1.
+In the next example,
+we'll start as before, putting down the
+first finger.
+Moving it, putting down a second finger,
+and then moving those fingers again.
+But this time, however, we'll lift the
+second finger first.
+In this case, we get an action pointer up
+action associated with pointer ID 1.
+And then finally, when we lift the last
+finger, we get the action
+up Action associated with the pointer ID
+0.
+For a last example, we'll use three
+fingers.
+We'll put down the first finger, then the
+second, and then a third.
+And then we'll move the fingers, and then
+we'll lift them up.
+First lifting the second finger, then the
+first
+finger, and then finally lifting the third
+finger.
+Our first example application in
+this lesson is called
+touchindicatetouchlocation.
+And this application draws a circle
+wherever the user touches the screen.
+The circle's color is randomly selected,
+and the application also then redraws
+the circle, following the user's finger,
+if it moves across the screen.
+And finally, when the user
+touches the screen in multiple locations.
+The size of the circles that are drawn,
+will
+change to reflect the number of currently
+active touches.
+Lets take a look at this application in
+action.
+So here's my device.
+[BLANK_AUDIO]
+And now I'll start up the touch indicate
+touch location application.
+When it starts, the screen is blank
+because I'm not touching the screen right
+now.
+Now I'll place one finger on the screen
+and that causes a
+single circle to be drawn at the place
+where I've touched the screen.
+As I slide my finger along the screen, you
+can
+see that the circle is redrawn, to track
+my finger movements.
+Now,
+I'll place a second finger on the screen.
+And that causes the second circle to be
+drawn under that finger.
+And as you can see, the size of the two
+circles, is now
+about half of what you saw when there was
+only a single circle.
+Now, here I'll take away the second
+finger, and
+the first circle goes back to its original
+size.
+Now,
+I'll put the second finger back, and again
+the two circles appear at
+half size.
+And, I can drag these two fingers around
+the screen, and the circles will follow my
+movements, and finally here I'll put down
+more fingers four, six, eight, ten.
+I'm out of fingers now.
+So now I'll move them around, and
+now I'll start to take away some fingers.
+Eight, six, four, two, one.
+Now, let's take a look at the source code
+for this application.
+Here's the application open in the IDE.
+Now I'll open the main activity.
+This coast, this code first creates a pool
+of custom views called marker views.
+Marker views will be used to mark the
+location of a single touch.
+Next, the code defines a set that holds
+the MarkerViews that are currently visible
+on the display.
+And now down in onCreate, the code gets
+the
+FrameLayout that represents the main view
+of this activity.
+And then it creates an OnTouchListener and
+sets this as the recipient of
+that listener's OnTouch callback.
+Let's look at that method.
+When the user touches the screen, this
+listener's OnTouch method is called,
+and that method begins by checking the
+action code for the new motion event.
+If the action code is ACTION_DOWN or
+ACTION_POINTER_DOWN, then there's been a
+new touch.
+So the code creates and displays a new
+marker view.
+The code
+does this by recording the pointer ID, and
+pointer
+index for this event.
+It then takes a marker view from the
+inactive list.
+And it then adds that marker view to
+the active set, using its pointer ID as
+the key for this view.
+Next, it sets the location of this marker
+view, and then
+it updates the total number of touches for
+each currently visible marker view.
+And then it adds the marker view to the
+activity's main view.
+Now if, instead, the action code was
+ACTION_UP, or ACTION_POINTER_UP.
+Then that means that a finger has been
+lifted off the screen.
+So the code essentially undoes
+what we just finished talking about.
+Now, as before, the code begins by
+recording
+the pointer ID and pointer index for this
+event.
+It then removes the marker view that was
+associated with
+the finger that was just lifted from the
+active set.
+It then adds that marker view back to the
+inactive list.
+And next, it updates the total number
+of touches for each currently visible
+marker view.
+And then it removes the marker view from
+the activity's main view.
+And lastly, if the
+action code is ACTION_MOVE.
+Then the code adjusts the
+location of the affected marker views, and
+initiates their redrawing.
+The code does this by looping over the
+pointers in the motion event.
+For each one, it gets the marker view for
+that
+pointer then it checks whether the
+pointer's traveled some minimum distance.
+If so, it sets a new location for that
+marker view, and then calls invalidate
+on the MarkerView which indicates that the
+MarkerView wants to be redrawn.
+

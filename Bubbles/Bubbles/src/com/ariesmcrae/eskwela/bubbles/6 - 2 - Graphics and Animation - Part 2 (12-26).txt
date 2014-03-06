@@ -1,0 +1,280 @@
+Hi.
+I'm Adam Porter, and this is Programming
+Mobile Applications for Android Handheld
+Systems.
+If you want to draw more complex graphics
+and you want to update those graphics
+frequently, then you can do your drawing
+with a canvas.
+Now as I said earlier, a canvas is a kind
+of context or mechanism for drawing to
+an underlying bitmap.
+And you can access a canvas either through
+a generic view object or through a special
+view subclass called SurfaceView.
+Usually, you'll draw through a generic
+view when your updates are less frequent,
+and if you take this approach, your
+application should create a custom view
+subclass.
+And then the system
+will provide the canvas to your view
+through a call to its onDraw method.
+If, instead, your application needs to
+frequently update its
+graphics, then you might consider drawing
+through a SurfaceView.
+With this approach, the application
+creates a custom, SurfaceView subclass.
+And it will also create a secondary thread
+with
+which drawing operations on that
+SurfaceView, will be performed.
+At run time, the application can then
+acquire its own canvas, And
+therefore, exercise more control over how
+and when drawing
+occurs.
+This next example application is called
+GraphicsCanvasBubble.
+And the idea behind this application
+is that it will draw a view and then
+update that view.
+But the updates are somewhat infrequent,
+about every second or so.
+So this application has an internal thread
+that wakes
+up once every second or so, and moves the
+view.
+And then uses a canvas as it redraws the
+view in its new location.
+Let's see that in action.
+So here's my device.
+And now, I'll start up the
+GraphicsCanvasBubble application.
+The application starts up with a bubble
+drawn at a randomly selected location.
+And every second or so, you can see that
+the bubble is erased, moved
+and then redrawn in it's new location.
+Let's look at the source code
+for this application.
+So here's the GraphicsCanvasBubble
+application open in the IDE.
+Now, I'll open the main activity.
+Here you can see that the application
+loads a bitmap from the resources
+directory.
+And then it uses that bitmap to create an
+instance of a custom view class called the
+BubbleView.
+Next, the code adds the BubbleView
+instance to the layout.
+And then it creates and starts a new
+thread.
+And that thread goes into
+a loop and on each iteration, it calls the
+BubbleView's move method.
+Now as we'll see in a second, this method
+changes the BubbleViews location.
+And then, returns true or false depending
+on whether the BubbleViews
+new location is or is not still visible on
+the display.
+Next the code calls the view classes post
+invalidate method.
+This message tells android to redraw this
+view and after that the thread
+goes to sleep for a second before waking
+up and starting the process one more time.
+Now I'll skip over most of the details of
+how the BubbleView moves itself.
+And I'll focus instead on how it gets
+redrawn.
+So when the drawing thread calls the post
+invalidate method, this
+tells Android that the BubbleView thinks
+it needs to be redrawn.
+If so, then Android will eventually call
+BubbleViews onDraw method.
+Passing in the canvas, with which the
+BubbleView is drawn.
+Let's look at that method.
+And as you can see, this method takes the
+canvas passed into it and calls
+its DrawBitmap method, passing in the
+bitmap to draw.
+Passing in the top and left coordinates of
+the position at which to draw the bit map.
+And finally, passing in a paint object
+that defines style parameters
+for this drawing operation.
+Now, if we'd like to really increase the
+frequency.
+With which we're redrawing the bubble to
+make it more smoothly glide across the
+display.
+Then, we might want to use a canvas and a
+SurfaceView in order to do that.
+And as I mentioned earlier, SurfaceViews
+need a
+separate, non-UI thread in which to do
+their work.
+So that SurfaceView operations
+won't interfere with UI thread operations.
+So, let's talk more about the SurfaceView
+class.
+A SurfaceView manages a low-level drawing
+area called a Surface.
+And this Surface is a dedicated drawing
+area, that is positioned within the
+applications view hierarchy.
+To define a SurfaceView,
+you need to create a custom class, which
+is a subclass of SurfaceView.
+And this custom class must,
+must also implement the
+SurfaceHolder.Callback interface.
+To use this new SurfaceView, you need to
+do two things.
+One, you need to
+setup the SurfaceView.
+And two, you need to draw to the
+SurfaceView that you just setup.
+Let's talk about each of those steps, one
+at a time.
+To set up the SurfaceView, you first use
+the SurfaceViews getHolder method to
+acquire the SurfaceView's SurfaceHolder.
+Next,
+you register the SurfaceView for
+SurfaceHolder callbacks.
+By calling the SurfaceHolder's addCallback
+method.
+Now these methods are one, surfaceCreated
+which is called when the SurfaceView's
+surface has been created.
+Until this method is called you can't draw
+on the surface.
+It's not ready.
+Two, surfaceChanged.
+This method is called whenever structural
+changes,
+such as changing the surface's size,
+occurs.
+And three, surfaceDestroyed.
+And this method is called right before a
+surface is destroyed.
+Once this method returns, you can no
+longer call operations that will draw
+on the surface.
+And the last setup step is to create the
+thread
+that will be used for executing drawing
+operations on this SurfaceView.
+And remember, that the SurfaceHolder
+callback methods
+will usually be called from the main
+thread not from the SurfaceView's thread.
+So you'll have to make sure that you
+synchronize
+access to any data that is needed by both
+threads.
+So once you've setup the SurfaceView you
+can start drawing on it.
+To draw, you'll first acquire a lock
+on the canvas by calling the lockCanvas
+method.
+Next, you do whatever drawing operations
+that you want to do on the canvas.
+For example, by calling a canvas method,
+such as drawBitmap.
+And last, you unlock
+the canvas, allowing Android to update the
+display.
+And you'll do this by
+calling the SurfaceHolder's
+unlockCanvasAndPost method.
+So let's look at a different
+implementation of
+our last example application, called
+GraphicsBubbleCanvas Surface View.
+[BLANK_AUDIO]
+So here's my device.
+And in a moment, I'll
+start up
+the GraphicsCanvasBubbleSurfaceView
+application.
+And when I do, the application will start
+up and
+draw the bubble at a randomly selected
+location on the display.
+But this time, instead of updating every
+second or so, this application
+will try to do as many updates as it can.
+In addition,
+the application will also rotate the
+bubble view to give the appearance
+that the bubble is twirling through space.
+So here goes.
+And as you can see, the bubble is smoothly
+animating both moving and rotating as it
+floats along.
+Let's look at the source code for this
+application.
+So here's the
+GraphicsCanvasBubbleSurfaceView
+application open in the IDE.
+Now I'll open the main activity.
+And in onCreate, this code again loads a
+bitmap from the resources directory.
+And then uses that bitmap to create an
+instance of a custom view class called
+BubbleView.
+Let's look at the BubbleView class.
+The BubbleView class extends SurfaceView
+and implements the SurfaceHolder.Callback
+interface.
+The constructive for this class does a lot
+of housekeeping.
+And then down at the end of the method,
+there's
+a call to the getHolder method, which
+returns a SurfaceHolder.
+The code takes that SurfaceHolder and then
+registers this BubbleView
+for callbacks.
+Let's look at what happens when these
+callbacks finally arrive.
+First, we see that
+when the surface for the SurfaceView is
+created, this code creates
+a new thread, and then starts it.
+And that thread's run method
+then goes into a loop.
+And on each iteration of the loop,
+it checks to see whether the thread's been
+interrupted.
+And if not, it then calls the move method,
+which like before moves the bubble view
+and returns a Boolean indicating whether
+or not the BubbleView has left the screen.
+If these checks evaluate to true, then
+the code attempts to lock the
+SurfaceHolder's canvas.
+And if
+successful, the code then calls the
+drawBubble method passing in the locked
+canvas.
+And then finally, the application unlocks
+the
+canvas and allows Android to update the
+display.
+Let's go back for one second and look at
+the drawBubble method.
+Now, this method, first redraws the
+canvas's background,
+then it rotates the canvas and then it
+redraws the bubble on the canvas.
+[BLANK_AUDIO].
+

@@ -1,0 +1,264 @@
+[BLANK_AUDIO]
+Hi, I'm Adam Porter and this is
+Programming Mobile Applications for
+Android Handheld Systems.
+Handheld devices allow users to create and
+consume large amounts of rich multimedia
+content.
+And this content includes audio content,
+like when
+you listen to music or record voice notes.
+Image content, like when you take and view
+photos.
+And video content, like when you take and
+view movies.
+In this lesson,
+we'll talk about the multimedia classes
+that Android provides, and
+we'll walk through the APIs and example
+applications that play
+audio, that let you watch audio, let you
+record audio,
+and, finally, that let you use the camera
+to capture images.
+So, let's get started.
+Android provides a number of classes and
+capabilities to support the encoding and
+decoding of common media formats.
+Your application
+can use these to play and record audio,
+still images, and video.
+Some of the classes we'll talk about today
+will
+be the AudioManager and SoundPool classes,
+which allow applications to
+play sound effects and audio files, and to
+control a
+device's audio-related hardware, such as
+its speakers and wireless headset.
+We'll talk about the RingtoneManager and
+Ringtones.
+And these are the sounds that you often
+hear when a phone call
+arrives, when a notification is received,
+and when alarms go off.
+And the MediaPlayer, which lets
+applications play audio and video files.
+The MediaRecorder, which allows
+applications to record audio and video.
+And, finally, we'll finish up by looking
+at the Camera
+class, which lets applications control
+hard, the hardware cameras on
+a device.
+The first class I'll talk about is the
+AudioManager.
+This class manages basic audio
+capabilities, like manipulating the
+device's
+volume, playing system sound effects, and
+changing the device's ringer mode.
+Applications acquire a reference to the
+AudioManager
+by calling Context.getSystemService,
+passing in
+the value Context.AUDIO_SERVICE.
+And once it has a reference to the
+AudioManager,
+an application can load and then play
+sound effects, adjust
+the device's volume, and control device
+hardware, for instance, by
+muting the microphone, or by turning on
+the Bluetooth headset.
+Another related class that can be used to
+play complex audio is the SoundPool class.
+A SoundPool represents a collection of
+audio samples or streams.
+And the SoundPool allows you to mix
+together
+and play multiple samples at the same
+time.
+Let's take a look at our first example
+application for this lesson.
+That application is called
+AudioVideoAudioManager.
+And when it runs, this application
+presents two buttons labeled Up and
+Down that are used to increase and
+decrease the device's volume.
+The application also displays a button
+labeled Play
+that, when pressed, plays a bubble popping
+sound at the current volume level.
+Let's run the application now.
+So, here's my device, and now I'll start
+up the AudioVideoAudioManager application.
+And, as promised, displays three buttons.
+Up, down, and play.
+The application also shows the current
+volume level on a scale from zero
+to ten.
+Right now, the volume level is set to six.
+Let me press the play button, so you can
+hear the bubble popping sound.
+Here goes.
+[SOUND]
+And now, I'll press the up button a few
+times, to go to maximum volume.
+And now I'll press the play button again.
+>> [SOUND]
+Now, I'll press the down button, and play
+button
+a few times, and you should hear the
+bubble pop at
+increasingly lower volumes.
+Here goes.
+[SOUND] Let's look at the source code for
+this application.
+Here's the AudioVideoAudioManager
+application open in the IDE.
+Now I'll open the Main Activity.
+Here, the onCreate method gets a reference
+to the AudioManager.
+Next, it begins to set up its user
+interface.
+First, there's the text view for
+displaying the current volume level.
+Next, there's the up button.
+And when clicked, this code plays a key
+clicking sound, and
+then tries to increase the volume level
+and update the level display.
+Next, we see the down button.
+And this is almost the same as the code
+for the up button.
+But it decreases rather than increases the
+volume level.
+Next, the code gets a reference to the
+play button, and then disables the button
+for now.
+After that, the code creates a SoundPool
+object, which
+it will use to play the bubble popping
+sound.
+The parameters for this SoundPool logic
+indicate that it will have only one
+audio stream, and that the stream is
+played on the audio
+music stream.
+Next, the code loads the bubble pop sound.
+Loading the sound is an
+asynchronous operation, so the code sets
+an onLoadComplete
+listener, which will be called when the
+sound is finally loaded.
+And when the onLoadComplete method is
+called,
+the code checks whether the operation was
+successful.
+And if so, it enables
+the play button.
+Earlier the code disabled the play button,
+and it did it to make sure
+that it didn't try to play this sound
+until the sound was properly loaded.
+Next, the code sets a listener on the play
+button.
+When pressed, this code plays the bubble
+popping sound at the current volume level.
+And, after that, the code
+requests audio focus, which means that it
+essentially wants to
+be in charge of the audio being played by
+the device.
+There's also some code in the onResume and
+onPause methods.
+The onResume method turns on the device's
+speakerphone and then loads the
+system's sound effects, like the key click
+sound effect that we used above.
+The onPause method begins by unloading the
+SoundPool and releasing it's resources.
+And then it turns off the device's
+speakerphone, and unloads the system sound
+effects.
+The next classes we'll talk about are
+Ringtone and the RingtoneManager.
+The RingtoneManager provides access to the
+audio
+clips that you hear, for example, when a
+phone call arrives, when you receive a new
+email message, or when an alarm goes off.
+And through the RingtoneManager,
+applications can get and set
+various ringtones, and they can play and
+stop playing them.
+Let's see an example application that uses
+the RingtoneManager.
+Now, this application is called
+AudioVideoRingtoneManager.
+And this application presents three
+buttons,
+respectively labeled Ringtone,
+Notification, and Alarm.
+Pressing one of these buttons causes the
+associated default ringtone to play.
+Let's give it a try.
+So, here's my device.
+Now I'll start up the
+AudioVideoRingtoneManager application.
+As you can see, it displays the three
+buttons:
+Ringtone, Notification, and Alarm.
+Let me press some of these buttons.
+First, let's listen to the default
+ringtone as I press the ringtone button.
+[SOUND] Now, let's try the default
+notification ringtone.
+[SOUND] And finally,
+let's try the default alarm ringtone.
+[SOUND] After this segment is over, try
+downloading,
+installing, and running this application
+on your device, and then go to
+your settings application and change your
+default ringtones.
+When you then re-run this application, you
+should see
+that it plays your new ringtones, not your
+old ones.
+So, let's look at the source code for this
+application.
+Here's the AudioVideoRingtoneManager
+application open in the IDE.
+Now, I'll open the main activity.
+In the onCreate method, the code creates
+three buttons.
+Let's look at the ringtone button as an
+example.
+Now here, we see that when this button is
+clicked, the code uses the RingtoneManager
+to get the URI
+for the default phone ringer ringtone.
+Next,
+the code gets the ringtone associated with
+that
+URI by calling the
+ringtoneManager.getRingtone
+method, passing in the URI.
+The result of all
+this is then passed into a method called
+playRingtone.
+Let's scroll down to that method.
+Now, this method checks to see whether the
+ringtone is currently playing.
+And if one is, then that ringtone is
+stopped by calling the ringtone class's
+stop method.
+A current ringtone is then set in the
+mCurrentRingtone variable, and
+if the current ringtone is not null then
+the code will start playing it.
+[BLANK_AUDIO]
+

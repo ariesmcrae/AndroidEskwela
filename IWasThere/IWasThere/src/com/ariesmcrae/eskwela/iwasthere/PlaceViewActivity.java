@@ -1,4 +1,27 @@
-package course.labs.locationlab;
+/**
+The MIT License (MIT)
+
+Copyright (c) 2014 Aries McRae
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+**/
+package com.ariesmcrae.eskwela.iwasthere;
 
 import java.util.ArrayList;
 
@@ -16,11 +39,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.ariesmcrae.eskwela.iwasthere.R;
 
+/** @author aries@ariesmcrae.com */
 public class PlaceViewActivity extends ListActivity implements LocationListener {
 	private static final long FIVE_MINS = 5 * 60 * 1000;
 
-	private static String TAG = "Lab-Location";
+	private static String TAG = "eskwela-Location";
 
 	// The last valid location reading
 	private Location mLastLocationReading;
@@ -49,12 +74,11 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 
 		// TODO 2- add a footerView to the ListView
 		// You can use footer_view.xml to define the footer
-		
-		
+
 		// When the footerView's onClick() method is called, it must issue the
 		// follow log call
 		// log("Entered footerView.OnClickListener.onClick()");
-		
+
 		// footerView must respond to user clicks.
 		// Must handle 3 cases:
 		// 1) The current location is new - download new Place Badge. Issue the
@@ -64,12 +88,11 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		// 2) The current location has been seen before - issue Toast message.
 		// Issue the following log call:
 		// log("You already have this location badge");
-		
+
 		// 3) There is no current location - response is up to you. The best
 		// solution is to disable the footerView until you have a location.
 		// Issue the following log call:
 		// log("Location data is not available");
-		
 
 	}
 
@@ -77,8 +100,7 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 	protected void onResume() {
 		super.onResume();
 
-		mMockLocationProvider = new MockLocationProvider(
-				LocationManager.NETWORK_PROVIDER, this);
+		mMockLocationProvider = new MockLocationProvider(LocationManager.NETWORK_PROVIDER, this);
 
 		// TODO 3 - Check NETWORK_PROVIDER for an existing location reading.
 		// Only keep this last reading if it is fresh - less than 5 minutes old.

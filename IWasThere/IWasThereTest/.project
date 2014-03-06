@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>LocationLabTest</name>
+	<name>IWasThereTest</name>
 	<comment></comment>
 	<projects>
-		<project>LocationLab</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

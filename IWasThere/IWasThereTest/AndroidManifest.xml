@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="course.labs.locationlab.test"
+    package="com.ariesmcrae.eskwela.iwasthere.test"
     android:versionCode="1"
     android:versionName="1.0" >
     
@@ -10,9 +10,9 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="course.labs.locationlab" />
+        android:targetPackage="com.ariesmcrae.eskwela.iwasthere" />
 
-    <application android:label="course.labs.locationlab.test" >
+    <application android:label="com.ariesmcrae.eskwela.iwasthere.test" >
         <uses-library android:name="android.test.runner" />
     </application>
  

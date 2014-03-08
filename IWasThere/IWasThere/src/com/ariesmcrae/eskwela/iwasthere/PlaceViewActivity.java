@@ -159,7 +159,6 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 	protected void onPause() {
 		mMockLocationProvider.shutdown();
 
-		// TODO 5 - unregister for location updates
 		mLocationManager.removeUpdates(this);		
 
 		super.onPause();

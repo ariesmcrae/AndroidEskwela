@@ -101,8 +101,7 @@ public class MainActivity extends Activity implements SelectionListener {
 	
 
 	/**
-	 * If stored Tweets are not fresh, reload them from network, Otherwise, load
-	 * them from file
+	 * If stored Tweets are not fresh, reload them from network, Otherwise, load them from file
 	 */
 	private void ensureData() {
 		log("In ensureData(), mIsFresh:" + mIsFresh);
@@ -115,8 +114,7 @@ public class MainActivity extends Activity implements SelectionListener {
 			// Start new AsyncTask to download Tweets from network
 			new DownloaderTask(this).execute(URL_LGAGA, URL_RBLACK, URL_TSWIFT);
 
-			// Set up a BroadcastReceiver to receive an Intent when download
-			// finishes.
+			// Set up a BroadcastReceiver to receive an Intent when download finishes.
 			mRefreshReceiver = new BroadcastReceiver() {
 				@Override
 				public void onReceive(Context context, Intent intent) {

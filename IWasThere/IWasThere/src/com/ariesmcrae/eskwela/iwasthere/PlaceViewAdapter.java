@@ -42,31 +42,40 @@ public class PlaceViewAdapter extends BaseAdapter {
 	private static LayoutInflater inflater = null;
 	private Context mContext;
 
+	
+	
 	public PlaceViewAdapter(Context context) {
 		mContext = context;
 		inflater = LayoutInflater.from(mContext);
 	}
 
+	
+	
 	public int getCount() {
 		return list.size();
 	}
 
+	
+	
 	public Object getItem(int position) {
 		return position;
 	}
 
+	
+	
 	public long getItemId(int position) {
 		return position;
 	}
 
+	
+	
 	public View getView(int position, View convertView, ViewGroup parent) {
-
 		View newView = convertView;
 		ViewHolder holder;
 
 		PlaceRecord curr = list.get(position);
 
-		if (null == convertView) {
+		if (convertView == null) {
 			holder = new ViewHolder();
 			newView = inflater.inflate(R.layout.place_badge_view, null);
 			holder.flag = (ImageView) newView.findViewById(R.id.flag);
@@ -85,13 +94,16 @@ public class PlaceViewAdapter extends BaseAdapter {
 		return newView;
 	}
 
+	
+	
 	static class ViewHolder {
-
 		ImageView flag;
 		TextView country;
 		TextView place;
 
 	}
+	
+	
 
 	public boolean intersects(Location location) {
 		for (PlaceRecord item : list) {
@@ -102,15 +114,21 @@ public class PlaceViewAdapter extends BaseAdapter {
 		return false;
 	}
 
+	
+	
 	public void add(PlaceRecord listItem) {
 		list.add(listItem);
 		notifyDataSetChanged();
 	}
 
+	
+	
 	public ArrayList<PlaceRecord> getList() {
 		return list;
 	}
 
+	
+	
 	public void removeAllViews() {
 		list.clear();
 		this.notifyDataSetChanged();

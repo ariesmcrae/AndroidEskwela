@@ -34,28 +34,40 @@ public class PlaceRecord {
 	private Bitmap mFlagBitmap;
 	private Location mLocation;
 
+	
+	
 	public PlaceRecord(String flagUrl, String country, String place, String elevation) {
 		this.mFlagUrl = flagUrl;
 		this.mCountryName = country;
 		this.mPlaceName = place;
 	}
 
+	
+	
 	public PlaceRecord(Location location) {
 		mLocation = location;
 	}
+	
+	
 
 	public String getFlagUrl() {
 		return mFlagUrl;
 	}
 
+	
+	
 	public void setFlagUrl(String flagUrl) {
 		this.mFlagUrl = flagUrl;
 	}
 
+	
+	
 	public String getCountryName() {
 		return mCountryName;
 	}
 
+	
+	
 	public void setCountryName(String country) {
 		this.mCountryName = country;
 	}
@@ -64,6 +76,8 @@ public class PlaceRecord {
 		return mPlaceName;
 	}
 
+	
+	
 	public void setPlace(String place) {
 		this.mPlaceName = place;
 	}
@@ -72,9 +86,13 @@ public class PlaceRecord {
 		return mFlagBitmap;
 	}
 
+	
+	
 	public void setFlagBitmap(Bitmap mFlagBitmap) {
 		this.mFlagBitmap = mFlagBitmap;
 	}
+	
+	
 
 	public boolean intersects(Location location) {
 
@@ -84,14 +102,20 @@ public class PlaceRecord {
 
 	}
 
+	
+	
 	public void setLocation(Location location) {
 		mLocation = location;
 	}
 
+	
+	
 	public Location getLocation() {
 		return mLocation;
 	}
 
+	
+	
 	@Override
 	public String toString() {
 		return "Place: " + mPlaceName + " Country: " + mCountryName;

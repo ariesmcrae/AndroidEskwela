@@ -71,6 +71,10 @@ public class PlaceViewAdapter extends BaseAdapter {
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View newView = convertView;
+		
+		// ViewHolder is a design pattern to avoid having to repeatedly call findViewById() during scroll.
+		// ViewHolder object stores each of the component views inside the tag field of the Layout, 
+		// so you can immediately access them without the need to look them up repeatedly.
 		ViewHolder holder;
 
 		PlaceRecord curr = list.get(position);

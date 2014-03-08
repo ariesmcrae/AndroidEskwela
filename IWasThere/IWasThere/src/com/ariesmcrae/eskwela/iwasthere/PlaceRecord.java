@@ -95,11 +95,9 @@ public class PlaceRecord {
 	
 
 	public boolean intersects(Location location) {
-
 		double tolerance = 1000;
 
 		return (mLocation.distanceTo(location) <= tolerance);
-
 	}
 
 	

@@ -24,6 +24,9 @@ THE SOFTWARE.
 package com.ariesmcrae.eskwela.iwasthere;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -38,8 +41,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-import com.ariesmcrae.eskwela.iwasthere.R;
 
 /** @author aries@ariesmcrae.com */
 public class PlaceViewActivity extends ListActivity implements LocationListener {
@@ -53,62 +56,101 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 	// The ListView's adapter
 	private PlaceViewAdapter mAdapter;
 
-	// default minimum time between new location readings
-	private long mMinTime = 5000;
-
-	// default minimum distance between old and new readings.
-	private float mMinDistance = 1000.0f;
-
 	// Reference to the LocationManager
 	private LocationManager mLocationManager;
 
 	// A fake location provider used for testing
 	private MockLocationProvider mMockLocationProvider;
+	
+	// default minimum time between new location readings
+	private long mMinTime = 5000; //5 seconds
 
+	// default minimum distance between old and new readings.
+	private float mMinDistance = 1000.0f; //1000 meters
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		// TODO 1 - Set up the app's user interface
-		// This class is a ListActivity, so it has its own ListView
-		// ListView's adapter should be a PlaceViewAdapter
+		ListView listView = getListView();
+		listView.setFooterDividersEnabled(true); // Puts a divider between ToDoItems and FooterView		
 
-		// TODO 2- add a footerView to the ListView
-		// You can use footer_view.xml to define the footer
+		TextView footerView = (TextView)getLayoutInflater().inflate(R.layout.footer_view, null); //Loads up TextView from footer_view.xml 
+		listView.addFooterView(footerView);	
 
-		// When the footerView's onClick() method is called, it must issue the follow log call
-		// log("Entered footerView.OnClickListener.onClick()");
-
-		// footerView must respond to user clicks. Must handle 3 cases:
-		// 1) The current location is new - download new Place Badge. Issue the
-		// following log call: log("Starting Place Download");
-
-		// 2) The current location has been seen before - issue Toast message.
-		// Issue the following log call: log("You already have this location badge");
-
-		// 3) There is no current location - response is up to you. 
-		// The best solution is to disable the footerView until you have a location.
-		// Issue the following log call:
-		// log("Location data is not available");
+		mAdapter = new PlaceViewAdapter(getApplicationContext());
+		listView.setAdapter(mAdapter);		
 		
-		//FIXME acquire location readings from Android.
-		//listen for location updates from the NETWORK_PROVIDER
+		footerView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				log("Entered footerView.OnClickListener.onClick()");
+				updateView();
+			}
+		});
 	}
 
+	
+	
+	
+	private void updateView() {
+		if (mLastLocationReading == null) {
+			log("Location data is not available");
+			return;
+		}
+		
+		boolean iHaveBeenHereBefore = mAdapter.intersects(mLastLocationReading);
+		
+		if (iHaveBeenHereBefore) {
+			String message = "You already have this location badge";
+			log(message);
+			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();			
+		} else {
+			log("Starting Place Download");
+			
+			//This is an AsyncTask. It performs work outside the main thread.
+			new PlaceDownloaderTask(this).execute(mLastLocationReading);
+		}
+	}
+	
+	
+	
+	
 	
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 
+		// Acquire reference to the LocationManager
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		if (mLocationManager == null) {
+			finish();			
+		}		
+		
+		// Get best last location measurement
+		mLastLocationReading = bestLastKnownLocation(mMinDistance, FIVE_MINS);			
+		
 		mMockLocationProvider = new MockLocationProvider(LocationManager.NETWORK_PROVIDER, this);
+		
+		// Determine whether initial reading is "good enough"
+		if (mLastLocationReading != null && age(mLastLocationReading) < FIVE_MINS) {
+			// Register for network location updates
+			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance, this);
 
-		// TODO 3 - Check NETWORK_PROVIDER for an existing location reading.
-		// Only keep this last reading if it is fresh - less than 5 minutes old.
+			// Register for GPS location updates
+			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mMinTime, mMinDistance, this);
 
-		// TODO 4 - register to receive location updates from NETWORK_PROVIDER
+			// Schedule a runnable to unregister location listeners
+			Executors.newScheduledThreadPool(1).schedule(new Runnable() {
+				@Override
+				public void run() {
+					mLocationManager.removeUpdates(PlaceViewActivity.this);
+				}
+			}, FIVE_MINS, TimeUnit.MILLISECONDS); 	// Unregister location listeners after 5 mins
+		}		
 	}
 
 	
@@ -118,6 +160,7 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		mMockLocationProvider.shutdown();
 
 		// TODO 5 - unregister for location updates
+		mLocationManager.removeUpdates(this);		
 
 		super.onPause();
 	}
@@ -132,41 +175,71 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 	
 	
 	@Override
-	public void onLocationChanged(Location currentLocation) {
-		// TODO 6 - Handle location updates
-		// Cases to consider
-		// 1) If there is no mLastLocationReading, keep currentLocation.
-		// 2) If the currentLocation is older than the mLastLocationReading, ignore currentLocation
-		// 3) If the currentLocation is newer than the last locations, keep the currentLocation.
+	public void onLocationChanged(Location newLocation) {
+		// 1) If there is no mLastLocationReading, store newLocation.
+		// 2) If the newLocation iw newer than mLastLocationReading, store new location.
+		if (mLastLocationReading == null) {
+			mLastLocationReading = newLocation;
+		} else if (newLocation.getTime() > mLastLocationReading.getTime()) {
+			mLastLocationReading = newLocation;
+		}
 	}
 	
 	
 
 	@Override
-	public void onProviderDisabled(String provider) {
-		// not implemented
-	}
-
-	
+	public void onProviderDisabled(String provider) { /** not implemented */ }
 	
 	@Override
-	public void onProviderEnabled(String provider) {
-		// not implemented
-	}
-
-	
+	public void onProviderEnabled(String provider) { /** not implemented */ }
 	
 	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// not implemented
-	}
+	public void onStatusChanged(String provider, int status, Bundle extras) { /** not implemented */ }
 
+	
 	
 	
 	private long age(Location location) {
+		//get the time now, minutes the last time location was obtained.
 		return System.currentTimeMillis() - location.getTime();
 	}
 
+	
+	
+	
+	private Location bestLastKnownLocation(float minAccuracy, long minTime) {
+		Location bestResult = null;
+		float bestAccuracy = Float.MAX_VALUE;
+		long bestTime = Long.MIN_VALUE;
+
+		List<String> matchingProviders = mLocationManager.getAllProviders();
+
+		for (String provider : matchingProviders) {
+			Location location = mLocationManager.getLastKnownLocation(provider);
+
+			if (location != null) {
+				float accuracy = location.getAccuracy();
+				long time = location.getTime();
+
+				if (accuracy < bestAccuracy) {
+					bestResult = location;
+					bestAccuracy = accuracy;
+					bestTime = time;
+				}
+			}
+		}
+
+		// Return null location if:
+		// (1) New location is less accurate than last location
+		// (2) New location was retrieved less than 5 minutes ago.
+		if (bestAccuracy > minAccuracy || bestTime < minTime) {
+			return null;
+		} else {
+			return bestResult;
+		}
+	}	
+	
+	
 	
 	
 	@Override

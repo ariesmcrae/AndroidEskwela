@@ -51,13 +51,19 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.ariesmcrae.eskwela.iwasthere.R;
 
-/** @author aries@ariesmcrae.com */
+/** 
+ * This is an AsyncTask. It performs work outside the main thread.
+ * 
+ * @author aries@ariesmcrae.com */
 public class PlaceDownloaderTask extends AsyncTask<Location, Void, PlaceRecord> {
 
 	private static String USERNAME = "iwasthere";
 
 	private HttpURLConnection mHttpUrl;
-	private WeakReference<PlaceViewActivity> mParent;
+	
+	// Add WeakReference to allow this AsyncTask to be garbage collected.
+	// Without WeakReference, PlaceViewActivity will maintain a reference to it.
+	private WeakReference<PlaceViewActivity> mParent; 
 
 	
 	

@@ -68,6 +68,7 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 	// default minimum distance between old and new readings.
 	private float mMinDistance = 1000.0f; //1000 meters
 	
+	private TextView mFooterView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +77,15 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		ListView listView = getListView();
 		listView.setFooterDividersEnabled(true); // Puts a divider between ToDoItems and FooterView		
 
-		TextView footerView = (TextView)getLayoutInflater().inflate(R.layout.footer_view, null); //Loads up TextView from footer_view.xml 
-		listView.addFooterView(footerView);	
+		mFooterView = (TextView)getLayoutInflater().inflate(R.layout.footer_view, null); //Loads up TextView from footer_view.xml 
+		listView.addFooterView(mFooterView);
+
+		toggleFooter(true);
 
 		mAdapter = new PlaceViewAdapter(getApplicationContext());
 		listView.setAdapter(mAdapter);		
 		
-		footerView.setOnClickListener(new OnClickListener() {
+		mFooterView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				log("Entered footerView.OnClickListener.onClick()");
@@ -137,6 +140,7 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		
 		// Determine whether initial reading is "good enough"
 		if (mLastLocationReading != null && age(mLastLocationReading) < FIVE_MINS) {
+			toggleFooter(false);
 			// Register for network location updates
 			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance, this);
 
@@ -284,6 +288,18 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		}
 	}
 
+	
+	
+	private void toggleFooter(boolean disableFooter) {
+		if (disableFooter) {
+			mFooterView.setEnabled(false);
+			mFooterView.setAlpha(0.2f);	
+		} else {
+			mFooterView.setEnabled(true);
+			mFooterView.setAlpha(1);	
+		}
+	}
+	
 	
 	
 	private static void log(String msg) {

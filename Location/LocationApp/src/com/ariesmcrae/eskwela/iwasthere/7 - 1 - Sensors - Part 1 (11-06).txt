@@ -1,0 +1,257 @@
+[BLANK_AUDIO]
+Hi, I'm Adam Porter, and this is
+programming mobile applications for
+Android handheld systems.
+Handheld devices allow for context aware
+computing.
+And that means that applications can
+respond or behave differently
+based on contextual factors, such as the
+location at which they're
+being used, how they're being held by
+their user.
+How much ambient light there is.
+Or how fast the user is traveling.
+To do this, applications read information
+from the wide range
+of sensors that come built in with today's
+hand-held devices.
+In this lesson, I'll talk about the
+sensors that Android devices can support
+And I'll
+discuss how applications can access these
+sensors.
+Next, I'll discuss SensorEvents, the class
+that Android uses to represent sensor
+readings.
+And I'll discuss SensorEventListeners,
+which are
+used to transfer information from a
+sensor.
+To your application.
+After that, I'll discuss some common
+techniques that are used to
+smooth out or filter sensor values, so
+that applications
+can use the values in a variety of
+different ways.
+And, as we go through the lesson, I'll
+demonstrate
+several example applications that make use
+of common sensors.
+Sensors are hardware components that
+measure
+the physical environment around the
+device.
+And these sensors come in three flavors.
+There are sensors that measure motion.
+For example, how fast you're moving.
+There are sensors that measure the
+position of the device.
+For instance where you are in the world or
+what the orientation of the device is.
+And there are sensors that measure the
+environment,
+such as the amount of light, pressure, or
+humidity
+around the device.
+For example, my device has a three axis
+accelerometer, which measures the forces
+exerted on the device.
+For example, when I shake it.
+It also has a 3-axis magnetic field.
+Which can be used to measure it's position
+or orientation relative to the earth's
+magnetic field.
+And we'll see that
+in action later on, in one of the example
+application.
+Lastly, my device has a barometer that
+measures atmospheric pressure.
+In order for an application to user
+sensor, it
+first needs to get a reference to the
+sensormanager.
+The sensormanager is the system service
+that manages sensors.
+Application, get a reference to the sensor
+manager by calling the getSystemService
+method, passing in the value
+Context.SENSOR_SERVICE.
+In order to access
+a specific sensor, applications use the
+sensor manager's getDefaultSensor
+method Passing in a constant corresponding
+to the desired sensor.
+Some of those sensor type constants
+include sensor.type_accelerometer for
+the accelerometer.
+Sensor.type_magnetic_field.
+For the magnetic field sensor.
+Or sensor.type_pressure
+for the barometer.
+[BLANK_AUDIO]
+If an application wants to receive
+information from a
+sensor, then it will have to implement a
+SensorEventListener.
+And this interface defines callback method
+that
+are invoked when a sensor's accuracy
+changes.
+And when the sensor acquires a new
+reading.
+When a sensor's accuracy changes, Android
+calls the onAccuracyChanged method.
+Passing in the sensor that changed.
+And passing in it's new accuracy.
+When a sensor has a new reading, the
+onSensorChanged method is
+called, passing in the sensor event
+corresponding to the new reading.
+Before your application can receive
+SensorEvents however,
+it will need to register a
+SensorEventListener.
+And once it's done with the sensor, you'll
+also want to unregister
+the sensor, the sensor listener, in order
+to avoid wasting battery power.
+To register a SensorEventListener for a
+given sensor you call the registerListener
+method.
+Passing in the SensorEventListener that
+will be called back to for the
+sensor you want to listen too and the rate
+at which you want the sensor to be polled.
+To unregister a listener for all sensors
+with which
+it's registered you can, for instance,
+call the unregisterListener method
+passing in the sensorEventListener, and
+passing in a bitmask
+indicating the sensors you no longer want
+to listen to.
+Sensor readings, are represented, as
+instances, of the sensorEvent class.
+The data this class holds, will of course
+depend on the specific
+kind of sensor, that generated the
+reading, but will include, the sensor
+type.
+A time-stamp, the accuracy of the reading,
+and
+the measurement data associated with that
+new reading.
+In order to make sense of the data, you'll
+need
+to know how measurements are interpreted
+for the specific sensor.
+For instance, many sensors use a
+three-dimensional coordinate system.
+When the default orientation is portrait
+and when the device is lying flat
+face-up on a table, the axis of to
+coordinate system are as shown here.
+The
+X axis runs from right to left.
+The Y axis runs top to bottom.
+And the Z axis.
+Runs down to up.
+And don't forget that the coordinate
+system
+is oriented around the device's default
+orientation.
+And that doesn't change even if the device
+changes its current orientation.
+For instance, even if the device
+moves from portrait mode To landscape
+mode.
+The coordinate system doesn't change.
+Our first example application for this
+lesson is called Sensor Raw Accelerometer.
+This application simply displays the raw
+values
+that it receives from the device's
+accelerometer.
+Let's see it in action.
+So
+here's my device.
+Now, I'll start up the sensor raw
+accelerometer application.
+As you can see, this application displays
+three text views.
+With number in them.
+And these number correspond to the X,
+Y, and Z values being read from this
+device's accelerometer.
+As you
+can see the greatest force is now being
+exerted on the Y axis.
+While I'm doing this demonstration, but
+obviously not succeeding
+to hold the device perfectly straight up
+and down.
+But of course, my hand shakes a bit and so
+the numbers will dance around a bit.
+I will now rotate the device counter
+clockwise 90 degrees.
+Around z-axis.
+And you'll see that now the greatest force
+is being exerted on the x-axis.
+Let's rotate the device another 90
+degrees, and now you see again,
+that the greatest force is being exerted
+on the y-axis.
+But this time that force is negative, and
+that's because the y axis
+is now upside down.
+And finally, i'll rotate the device
+another 90
+degrees, and again you'll see that the
+greatest
+force is exerted on the x axis, and
+that that force is operating in the
+negative direction.
+Let's look at the source code for this
+application.
+Here's the sensor raw accelerometer
+application open in the IDE.
+Now, I'll open the main activity.
+Notice that this class implements the
+sensor eventListener interface.
+So we can receive callbacks from the
+sensor manager.
+Now, non create the application gets a
+reference to the sensor manager.
+Next, it gets a reference to the device's
+accelerom- by calling sensor manager dot
+get default sensor.
+Passing in the type [UNKNOWN] that
+corresponds.
+To the accelerometer.
+In the [UNKNOWN] method, the application
+registers this class as a listener
+for accelerometer event, by calling the
+registerListener method.
+The last parameter.
+SensorManager.sensor_delay_UI.
+And this corresponds to a relatively low
+frequency holding rate.
+Next, the one pause method unregisters
+this class
+as a listener for any and all sensors.
+To which it may be listening.
+Scrolling down, we now come to the
+unSensorChanged method.
+This method first checks to make sure that
+this event is an accelerometer reading.
+Next, it checks that a certain amount of
+time has passed
+since the last reading was displayed.
+And if so.
+The code records the accelerometer's x, y
+and z
+values, and then it displays those values
+on the screen.
+

@@ -1,0 +1,234 @@
+Hi.
+I'm Adam Porter.
+And this is Programming Mobile
+Applications For Android Handheld Systems.
+Locations indicate real places around us.
+And so it often makes sense to visualize
+locations using maps, which are visual
+representations of area.
+Android provides mapping support through
+the Google Maps Android
+v2 API.
+This API provides several different kinds
+of maps, specifically normal maps, which
+look like traditional road maps.
+Satellite maps, which display aerial
+photographs of an area.
+Hybrids maps, which combine satellite
+photographs and road maps.
+And terrain maps, which display
+topographic
+details such as elevation.
+Android allows your application to
+customize maps in several ways.
+For instance, you can change the area of
+the map that's visible to the user.
+You can add icons, called markers, at
+specific places on the map.
+And you can add overlay images on top of
+the map.
+You can make the map respond to gestures,
+such
+as a two finger stretch and pinch to zoom.
+And a two finger rotation to rotate the
+map.
+And you can also have the map indicated
+the user's current location.
+For instance by placing a special marker
+on the map.
+To display maps, your application will
+probably use some of the following
+classes.
+Google map,
+which represents and manages the map
+itself.
+Map Fragment, which displays a Google map,
+within a fragment.
+Camera, which defines the part of the map
+that's visible on the screen.
+And defines the viewpoint from which the
+user is seeing the map.
+And marker, which represents icons,
+sometimes
+with popup windows, that indicate
+locations
+on the map.
+And then allow your application to
+display information associated with those
+locations.
+To set up and run a maps application,
+you'll need to take some extra steps.
+For instance, you'll need to configure the
+Google Play services SDK.
+You'll need to obtain an API key that
+identifies your application.
+You'll need to specify
+permissions, settings, and the API key in
+the Android manifest dot XML file.
+And then you'll need to add the map to
+your application.
+And these steps are described in more
+detail.
+At the following url.
+In order to use the maps, you'll need to
+include several permissions.
+You'll need the internet permission, so
+that map
+images can be downloaded from Google Map
+servers.
+You'll also need the access_network_state
+permission.
+Which the maps API uses to determine
+whether it can download data.
+You'll need the write_external_storage
+permission because map data needs to be
+written to the device's external storage
+area.
+And you'll need the
+google.android.providers.gsf
+Dot permission, dot read services
+permission,
+and that's so the maps API can access
+Google Web Services.
+And, if your map means to require location
+information, for
+instance, to display the user's current
+location then you'll also
+need to specify Either one or more of the
+access underscore course
+location and access underscore find
+underscore location permissions.
+Our next example application is called
+map, earthquake, map.
+And this application acquires earthquake
+data from a server.
+And then displays that data on a map,
+using clickable markers.
+Let's take a look.
+So
+here's my device.
+And before I show you the map earthquake
+map application,
+let me take you back to the lesson on
+networking.
+If you remember, in that lesson.
+I showed you the networking Android
+HTTP client JSON application, which
+issued a network request for earthquake
+data from the
+api.geonames.org web service.
+And that request returned a list of
+earthquakes that had occurred in a
+particular
+geographic region, and then the
+application displayed
+that data in a simple list view.
+I'll now start that application so you
+can remember what its user interface
+looked like.
+Here it goes.
+As you can see, the application gets the
+earthquake
+data, and then presents it in a list view.
+Now this is certainly fine.
+The data I wanted is there on the screen.
+But the user interface isn't all that
+helpful to me.
+For example, I can't really visualize
+where
+on the Earth these locations really are.
+And I can't easily distinguish
+major earthquakes from lesser strength
+earthquakes from lesser strength
+earthquakes.
+So let's now look at the map, earthquake,
+map, application.
+And we'll see the same data but this time
+it's presented in a map.
+Here goes,
+as you can see, instead of a list view
+showing lots of text the
+earthquake data now appears as a set of
+markers on a map of the world.
+The location of the marker tells us where
+the earthquake occurred.
+And the color of the marker indicates the
+magnitude of the earthquake.
+Markers that are more red in tone indicate
+higher magnitude earthquakes.
+Markers that are more blue in tone
+indicate lower magnitude earthquakes.
+And in addition, if I touch a marker, a
+pop-up window will appear showing the
+magnitude of that earthquake.
+Now let me zoom in and touch a few
+markers.
+Okay, let's take a look at the source code
+for this application.
+Here's the application opened in the IDE.
+Now I'll open the main activity.
+In On Create, the application sets the
+content view to the main.xml
+file in the res/layout directory.
+Lets open that file now.
+And here you can see that the entire
+layout is comprised
+of a single fragment that is provided by
+the
+com.google.android.gms.maps.mapfragment
+class.
+By turning back to the main activity, the
+application creates and starts an axync
+task, which acquires the earthquake data
+in the do in background method.
+And then it parses it and updates the map
+In the onPostExecute method.
+So let's scroll down to the onPostExecute
+method.
+This method begins by getting a reference
+to the Google Map underline the
+MapFragment.
+Next, it iterates through the result data.
+And for each EarthQuakeRec in that result
+data.
+This code add a new marker.
+And each marker is created by creating a
+marker options object
+and then passing that object to the Google
+maps ad marker method.
+And as we've seen with other API's
+the marker options class uses a fluent
+interface.
+And so the code first creates a new empty
+marker option object, and then sets the
+marker's position, by calling
+the position method, and then it tacks on
+the text that
+will appear in a pop up information window
+when the user touches the marker.
+By calling the title method.
+In this case the title simply displays the
+earthquakes magnitude.
+And after that the
+code sets the color of the marker by
+tacking on a call to the icon method.
+Passing in the default marker, but setting
+it's color to reflect the earthquake's
+magnitude.
+Finally the code calls the mass moveCamera
+method
+to center the map at a particular
+location.
+Now to keep this example simple, I
+precomputed
+the map center.
+But of course it would be much better and
+more robust to
+compute the center based on the actual
+data returned by the webservice.
+So that's all for our lesson on location
+and maps.
+Please join me next time when we'll
+discuss data management.
+See you then.
+

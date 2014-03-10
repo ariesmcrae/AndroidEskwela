@@ -1,0 +1,340 @@
+[BLANK_AUDIO]
+Hi, I'm Adam Porter, and this is
+Programming Mobile Applications for
+Android Handheld Systems.
+A few years ago my family spent some time
+in Montreal, Canada
+and right as we arrived it began to snow
+and snow and snow.
+And of course we, quickly found out that
+my
+two daughters had forgotten to pack their
+snow boots.
+So, we needed to buy boots and we needed
+to
+buy them from a store that was close to
+us.
+So I whipped out my mobile phone.
+And I ran a search for boots in the local
+area.
+The application came back with a list of
+shoe stores plotted on a map.
+The application also allowed me to get
+directions from my current location to the
+stores.
+We followed those directions, bought some
+boots and saved our vacation.
+Now I'm sure many of you could recount
+similar experiences.
+Sometimes the information we need depends
+critically on where
+we are at the time we need that
+information.
+To help out in these situations, Android
+includes support for location and maps.
+In today's lesson,
+I'll talk about some of the support.
+I'll talk about what location information
+is, and I'll go over
+the classes that your applications will
+use to get that information.
+I talk about maps, which allow you to take
+location information and display it
+visually to your users.
+And I'll finish up by going over the
+classes that Android provides,
+to let you display and customize map.
+So generally speaking, mobile applications
+can benefit from being location aware.
+That is no where bay, and other things
+are,
+at a partic, at a particular moment in
+time.
+And so Android allows applications
+to determine and manipulate location
+information.
+Now earlier I gave an example
+of using location capabilities, to find
+stores near my current location.
+And then to get directions from my current
+location to one of those stores.
+In addition, applications can also use
+this capability to
+do things like define a geographical area
+or geofence.
+And then to initiate actions when the user
+enters.
+Or exits the Geofence.
+Android provides several support classes
+to make all of this possible.
+One of our classes is the location class.
+A location represents a position on the
+Earth.
+A location instance contains information
+such as
+latitude, longitude, a time stamp and
+optionally
+an estimated accuracy, altitude, speed and
+bearing.
+Location information comes from location
+providers and
+devices can have access to multiple
+location providers.
+Now the actual data may come from sources
+such
+as GPS satellites, cell phone towers and
+WiFi access points.
+Specifically, applications can request
+information from the network
+provider, the GPS provider and passive
+provider.
+Let's look at each of these, one at a
+time.
+The network provider, determines location
+based on cell tower and
+WiFi access points.
+If you want to use this provider,
+then you must declare either the
+ACCESS_COARSE_LOCATION
+permission.
+Or the ACCESS_FINE_LOCATION
+permission.
+GPS provider gets its location permission
+from GPS satellites.
+To use this provider, you must declare the
+ACCESS_FINE_LOCATION permission.
+The passive provider doesn't actually turn
+on any devices.
+It just returns locations that happen to
+have
+been calculated through the requests of
+other applications.
+So using this provider requires
+that you declare the ACCESS_FINE_LOCATION
+permission.
+Now while you can get location information
+from each of these different sources,
+each one offers a different set of trade
+offs with respect to cost.
+Accuracy, availability, and timeliness of
+the data it provides.
+Let's look at some of the providers,
+available in Android.
+The GPS provider relies on communicating
+with a satellite.
+And so, this provider is generally the
+most expensive but gives the most accurate
+readings.
+It also takes the longest amount of time
+to provide that very accurate reading, and
+the
+user needs to have a clear view of
+the sky when they're communicating with
+the GPS satellite.
+The network provider is cheaper than the
+GPS provider.
+But, it may give less accurate readings.
+It takes less time to return location
+information, but it's only useful
+when you're in the range of a cell tower
+or WiFi access point.
+The passive provider is the cheapest to
+use.
+You're essentially just reusing
+measurements that already have been taken.
+So it's fast,
+but it may turn out that there are no
+recent readings when your application asks
+for that information.
+One way to access location information is
+to use the location manager class.
+The location manager is a system service
+for accessing location data.
+You acquire a reference to the location
+manager by calling the context
+classes get system service method, passing
+in an ID for the service.
+Context.LOCATION_SERVICE.
+Once you have a reference
+to the location manager, you can use it to
+get and use location information.
+For instance, you can determine the last
+reading taken by a particular provider.
+You can register for location updates to
+find out when new location information is
+acquired.
+And you can also register to receive
+intents.
+When the device nears or moves away from a
+given geographic region.
+If you want to be informed when new
+locations
+are determined, you can implement and use
+a location listener.
+The location listener interface defines
+the callback
+methods that are called when location
+changes.
+Or, when the status of
+a location provider changes.
+A location listener interface includes the
+following methods.
+On location changed.
+Which gets called when a new location was
+determined.
+onProviderDisabled and onProviderEnabled,
+which are called when
+the user disables or enables a particular
+provider.
+And onStatusChanged,
+which is called when a provider's status
+changes.
+If your application can't get a recent
+reading from the
+system, it will then need to acquire its
+own reading.
+And to do this, your application will
+normally perform the following steps.
+First, it will start listening for updates
+from location providers by registering a
+location listener.
+Next, it should maintain and update a
+current best estimate,
+as it begins to receive location updates.
+And as this process unfolds,
+the application should determine when the
+current best estimate is good enough.
+And at that point it should stop listening
+for location updates by unregistering the
+location listener.
+And finally, it can use that best estimate
+as the current location.
+Now when you're determining whether your
+location is good
+enough, there are several factors that you
+might want to consider.
+For example, for how long should you keep
+measuring?
+For instance, a navigation system might
+need continuous measurement.
+While a restaurant finder application
+might just need a single measurement.
+Another question is, how accurate
+a measurement do you actually need?
+And again, a navigation system needs to
+know
+your location to say, within ten meters or
+so.
+A restaurant application, might just need
+to know what city you're in.
+And in that case, you'd only need to know,
+you're
+location to say, within a kilometer, or
+maybe even less.
+And of course, the choices you make here,
+clearly impact,
+battery usage.
+The example application is called,
+location, get location.
+This application, first acquires and
+displays, a, the last known location, from
+all the providers on the device.
+If these readings are too old, or have too
+low accuracy.
+Then the application acquires and displays
+new readings
+from all the providers on the device.
+Let's give the application a run.
+So here's my device.
+Now, I'll start the location GetLocation
+application.
+When the application starts up, it
+displays
+the best previous location estimate from
+the device.
+This information is then displayed using
+red text.
+Since this reading is either not recent
+enough
+or doesn't have enough accuracy, the
+application goes on
+to acquire new location estimates, and you
+can see
+that these new readings are displayed
+using grey text.
+Let's look at the source code for this
+application.
+So here's the application open in the IDE,
+now I'll open up the main activity.
+And let's scroll down to the on create
+method.
+And here we see that the code acquires a
+reference to the location manager.
+Next, it calls a method called best last
+known location.
+This method
+will find the last known location from
+every location provider, and then
+will return the most accurate of
+these measurements that also meets certain
+criteria.
+If no readings meets those criteria, and
+the method returns null.
+Next, the code displays information about
+the last reading.
+After this, the code
+continues by defining a location listener.
+And in the listener's on location change
+method, the code determines
+whether the new location is better than
+the current best estimate.
+If so, the code then updates the best
+estimate, and then updates the display.
+Now, if the accuracy is less than
+min_accuracy,
+then the current location is considered
+good enough.
+And so the code unregisters the location
+listener.
+Now, scrolling down, you see the on resume
+method.
+This method checks to see whether the
+current best estimate, is
+of low accuracy, or was taken more than
+two minutes ago.
+If so, the code registers listeners for
+both
+the network provider, and for the GPS
+provider.
+After that, the code schedules a runnable,
+that will unregister the listeners after
+a fixed period of time.
+The code will also unregister the location
+listener, if the activity's onPause method
+is called.
+[BLANK_AUDIO]
+Here are some tips you can use to
+save battery power when you're creating
+location aware applications.
+First, always check the last known
+measurement.
+If that's good enough, then there's no
+need to take new measurements.
+Return updates as infrequently as possible
+and limit the total measurement time.
+Some applications, such as an application
+that tracks a jogger.
+Need to update more frequently and need to
+keep measuring
+while the application is running because
+the user's location is changing.
+Applications like the one we just saw
+though will need a
+single good measurement so they can
+measure infrequently and for less time.
+Use the least accurate measurement
+necessary, and
+only use GPS if you really need too.
+Turn off the updates in OnPause.
+[BLANK_AUDIO]
+

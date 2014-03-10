@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasthere;
 
 import java.util.ArrayList;
@@ -61,30 +61,33 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 
 	// A fake location provider used for testing
 	private MockLocationProvider mMockLocationProvider;
-	
+
 	// default minimum time between new location readings
-	private long mMinTime = 5000; //5 seconds
+	private long mMinTime = 5000; // 5 seconds
 
 	// default minimum distance between old and new readings.
-	private float mMinDistance = 1000.0f; //1000 meters
-	
+	private float mMinDistance = 1000.0f; // 1000 meters
+
 	private TextView mFooterView = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		ListView listView = getListView();
-		listView.setFooterDividersEnabled(true); // Puts a divider between ToDoItems and FooterView		
 
-		mFooterView = (TextView)getLayoutInflater().inflate(R.layout.footer_view, null); //Loads up TextView from footer_view.xml 
+		ListView listView = getListView();
+		listView.setFooterDividersEnabled(true); // Puts a divider between
+													// ToDoItems and FooterView
+
+		mFooterView = (TextView) getLayoutInflater().inflate(
+				R.layout.footer_view, null); // Loads up TextView from
+												// footer_view.xml
 		listView.addFooterView(mFooterView);
 
 		toggleFooter(true);
 
 		mAdapter = new PlaceViewAdapter(getApplicationContext());
-		listView.setAdapter(mAdapter);		
-		
+		listView.setAdapter(mAdapter);
+
 		mFooterView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -94,34 +97,40 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		});
 	}
 
-	
-	
-	
 	private void updateView() {
-		if (mLastLocationReading == null) {
-			log("Location data is not available");
-			return;
-		}
-		
-		boolean iHaveBeenHereBefore = mAdapter.intersects(mLastLocationReading);
-		
-		if (iHaveBeenHereBefore) {
-			String message = "You already have this location badge";
-			log(message);
-			Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();			
+		log("Entered footerView.OnClickListener.onClick()");
+		// footerView must respond to user clicks.
+		// Must handle 3 cases:
+		// 1) The current location is new - download new Place Badge. Issue the
+		// following log call:
+		// log("Starting Place Download");
+
+		// 2) The current location has been seen before - issue Toast message.
+		// Issue the following log call:
+		// log("You already have this location badge");
+
+		// 3) There is no current location - response is up to you. The best
+		// solution is to disable the footerView until you have a location.
+		// Issue the following log call:
+		// log("Location data is not available");
+		if (null != mLastLocationReading) {
+			if (mAdapter.intersects(mLastLocationReading)) {
+				log("You already have this location badge");
+				Toast.makeText(getApplicationContext(),
+						"You already have this location badge",
+						Toast.LENGTH_LONG).show();
+			} else {
+				log("Starting Place Download");
+				// PlaceRecord place = new PlaceRecord(mLastLocationReading);
+				// addNewPlace(place);
+				new PlaceDownloaderTask(PlaceViewActivity.this)
+						.execute(mLastLocationReading);
+			}
 		} else {
-			log("Starting Place Download");
-			
-			//This is an AsyncTask. It performs work outside the main thread.
-			new PlaceDownloaderTask(this).execute(mLastLocationReading);
+			log("Location data is not available");
 		}
 	}
-	
-	
-	
-	
-	
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -130,22 +139,27 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		if (mLocationManager == null) {
-			finish();			
-		}		
-		
+			finish();
+		}
+
 		// Get best last location measurement
-		mLastLocationReading = bestLastKnownLocation(mMinDistance, FIVE_MINS);			
-		
-		mMockLocationProvider = new MockLocationProvider(LocationManager.NETWORK_PROVIDER, this);
-		
+		mLastLocationReading = bestLastKnownLocation(mMinDistance, FIVE_MINS);
+
+		mMockLocationProvider = new MockLocationProvider(
+				LocationManager.NETWORK_PROVIDER, this);
+
 		// Determine whether initial reading is "good enough"
-		if (mLastLocationReading != null && age(mLastLocationReading) < FIVE_MINS) {
+		if (mLastLocationReading != null
+				&& age(mLastLocationReading) < FIVE_MINS) {
 			toggleFooter(false);
 			// Register for network location updates
-			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance, this);
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, mMinTime, mMinDistance,
+					this);
 
 			// Register for GPS location updates
-			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mMinTime, mMinDistance, this);
+			mLocationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, mMinTime, mMinDistance, this);
 
 			// Schedule a runnable to unregister location listeners
 			Executors.newScheduledThreadPool(1).schedule(new Runnable() {
@@ -153,63 +167,57 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 				public void run() {
 					mLocationManager.removeUpdates(PlaceViewActivity.this);
 				}
-			}, FIVE_MINS, TimeUnit.MILLISECONDS); 	// Unregister location listeners after 5 mins
-		}		
+			}, FIVE_MINS, TimeUnit.MILLISECONDS); // Unregister location
+													// listeners after 5 mins
+		}
 	}
 
-	
-	
 	@Override
 	protected void onPause() {
 		mMockLocationProvider.shutdown();
 
-		mLocationManager.removeUpdates(this);		
+		mLocationManager.removeUpdates(this);
 
 		super.onPause();
 	}
 
-	
-	
 	public void addNewPlace(PlaceRecord place) {
 		log("Entered addNewPlace()");
 		mAdapter.add(place);
 	}
 
-	
-	
 	@Override
 	public void onLocationChanged(Location newLocation) {
 		// 1) If there is no mLastLocationReading, store newLocation.
-		// 2) If the newLocation iw newer than mLastLocationReading, store new location.
+		// 2) If the newLocation iw newer than mLastLocationReading, store new
+		// location.
 		if (mLastLocationReading == null) {
 			mLastLocationReading = newLocation;
 		} else if (newLocation.getTime() > mLastLocationReading.getTime()) {
 			mLastLocationReading = newLocation;
 		}
 	}
-	
-	
 
 	@Override
-	public void onProviderDisabled(String provider) { /** not implemented */ }
-	
-	@Override
-	public void onProviderEnabled(String provider) { /** not implemented */ }
-	
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) { /** not implemented */ }
+	public void onProviderDisabled(String provider) {
+		/** not implemented */
+	}
 
-	
-	
-	
+	@Override
+	public void onProviderEnabled(String provider) {
+		/** not implemented */
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		/** not implemented */
+	}
+
 	private long age(Location location) {
-		//get the time now, minutes the last time location was obtained.
+		// get the time now, minutes the last time location was obtained.
 		return System.currentTimeMillis() - location.getTime();
 	}
 
-	
-	
-	
 	private Location bestLastKnownLocation(float minAccuracy, long minTime) {
 		Location bestResult = null;
 		float bestAccuracy = Float.MAX_VALUE;
@@ -240,11 +248,8 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		} else {
 			return bestResult;
 		}
-	}	
-	
-	
-	
-	
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -252,63 +257,57 @@ public class PlaceViewActivity extends ListActivity implements LocationListener 
 		return true;
 	}
 
-	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		
-			case R.id.print_badges:
-				ArrayList<PlaceRecord> currData = mAdapter.getList();
-			
-				for (int i = 0; i < currData.size(); i++) {
-					log(currData.get(i).toString());
-				}
-				
-				return true;
-				
-			case R.id.delete_badges:
-				mAdapter.removeAllViews();
-				return true;
-				
-			case R.id.place_one:
-				mMockLocationProvider.pushLocation(37.422, -122.084);
-				return true;
-				
-			case R.id.place_invalid:
-				mMockLocationProvider.pushLocation(0, 0);
-				return true;
-				
-			case R.id.place_two:
-				mMockLocationProvider.pushLocation(38.996667, -76.9275);
-				return true;
-				
-			default:
-				return super.onOptionsItemSelected(item);
+
+		case R.id.print_badges:
+			ArrayList<PlaceRecord> currData = mAdapter.getList();
+
+			for (int i = 0; i < currData.size(); i++) {
+				log(currData.get(i).toString());
+			}
+
+			return true;
+
+		case R.id.delete_badges:
+			mAdapter.removeAllViews();
+			return true;
+
+		case R.id.place_one:
+			mMockLocationProvider.pushLocation(37.422, -122.084);
+			return true;
+
+		case R.id.place_invalid:
+			mMockLocationProvider.pushLocation(0, 0);
+			return true;
+
+		case R.id.place_two:
+			mMockLocationProvider.pushLocation(38.996667, -76.9275);
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	
-	
 	private void toggleFooter(boolean disableFooter) {
 		if (disableFooter) {
 			mFooterView.setEnabled(false);
-			mFooterView.setAlpha(0.2f);	
+			mFooterView.setAlpha(0.2f);
 		} else {
 			mFooterView.setEnabled(true);
-			mFooterView.setAlpha(1);	
+			mFooterView.setAlpha(1);
 		}
 	}
-	
-	
-	
+
 	private static void log(String msg) {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		Log.i(TAG, msg);
 	}
 

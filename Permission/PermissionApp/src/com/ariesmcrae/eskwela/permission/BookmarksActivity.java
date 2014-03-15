@@ -40,8 +40,7 @@ public class BookmarksActivity extends Activity {
 	
 	private static final String TAG = "eskwela-Permissions";
 
-	static final String[] projection = { Browser.BookmarkColumns.TITLE,
-			Browser.BookmarkColumns.URL };
+	static final String[] projection = { Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.URL };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

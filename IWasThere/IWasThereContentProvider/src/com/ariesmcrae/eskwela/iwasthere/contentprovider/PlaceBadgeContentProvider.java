@@ -33,7 +33,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
 
 /** @author aries@ariesmcrae.com */
 public class PlaceBadgeContentProvider extends ContentProvider {

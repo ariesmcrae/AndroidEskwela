@@ -92,8 +92,9 @@ public class PlaceViewActivity extends ListActivity implements LocationListener,
         toggleFooter(true);
         
         // Create and set empty PlaceViewAdapter
-        // Cursor cursor = getContentResolver().query(PlaceBadgesContract.CONTENT_URI, null, null, null, null);        
-        mCursorAdapter = new PlaceViewAdapter(this, null, 0);
+        Cursor cursor = null;
+        int flags = 0;
+        mCursorAdapter = new PlaceViewAdapter(this, cursor, flags);
         listView.setAdapter(mCursorAdapter);        
         
         // Initialize a CursorLoader. After init is called, 

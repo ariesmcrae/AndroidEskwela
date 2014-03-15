@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="course.labs.contentproviderlab.provider"
+    package="com.ariesmcrae.eskwela.iwasthere.contentprovider"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -20,8 +20,8 @@
         android:theme="@style/AppTheme" >
 
         <provider
-            android:name=".PlaceBadgeContentProvider"
-            android:authorities="course.labs.contentproviderlab.provider"
+            android:name="com.ariesmcrae.eskwela.iwasthere.contentprovider.PlaceBadgeContentProvider"
+            android:authorities="com.ariesmcrae.eskwela.iwasthere.contentprovider"
             android:enabled="true"
             android:exported="true" >
         </provider>

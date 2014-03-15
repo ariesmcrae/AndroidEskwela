@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasthere;
 
 import android.graphics.Bitmap;
@@ -28,95 +28,71 @@ import android.location.Location;
 
 /** @author aries@ariesmcrae.com */
 public class PlaceRecord {
-	private String mFlagUrl;
-	private String mCountryName;
-	private String mPlaceName;
-	private Bitmap mFlagBitmap;
-	private Location mLocation;
+    private String mFlagUrl;
+    private String mCountryName;
+    private String mPlaceName;
+    private Bitmap mFlagBitmap;
+    private Location mLocation;
 
-	
-	
-	public PlaceRecord(String flagUrl, String country, String place, String elevation) {
-		this.mFlagUrl = flagUrl;
-		this.mCountryName = country;
-		this.mPlaceName = place;
-	}
+    public PlaceRecord(String flagUrl, String country, String place, String elevation) {
+        this.mFlagUrl = flagUrl;
+        this.mCountryName = country;
+        this.mPlaceName = place;
+    }
 
-	
-	
-	public PlaceRecord(Location location) {
-		mLocation = location;
-	}
-	
-	
+    public PlaceRecord(Location location) {
+        mLocation = location;
+    }
 
-	public String getFlagUrl() {
-		return mFlagUrl;
-	}
+    public String getFlagUrl() {
+        return mFlagUrl;
+    }
 
-	
-	
-	public void setFlagUrl(String flagUrl) {
-		this.mFlagUrl = flagUrl;
-	}
+    public void setFlagUrl(String flagUrl) {
+        this.mFlagUrl = flagUrl;
+    }
 
-	
-	
-	public String getCountryName() {
-		return mCountryName;
-	}
+    public String getCountryName() {
+        return mCountryName;
+    }
 
-	
-	
-	public void setCountryName(String country) {
-		this.mCountryName = country;
-	}
+    public void setCountryName(String country) {
+        this.mCountryName = country;
+    }
 
-	public String getPlace() {
-		return mPlaceName;
-	}
+    public String getPlace() {
+        return mPlaceName;
+    }
 
-	
-	
-	public void setPlace(String place) {
-		this.mPlaceName = place;
-	}
+    public void setPlace(String place) {
+        this.mPlaceName = place;
+    }
 
-	public Bitmap getFlagBitmap() {
-		return mFlagBitmap;
-	}
+    public Bitmap getFlagBitmap() {
+        return mFlagBitmap;
+    }
 
-	
-	
-	public void setFlagBitmap(Bitmap mFlagBitmap) {
-		this.mFlagBitmap = mFlagBitmap;
-	}
-	
-	
+    public void setFlagBitmap(Bitmap mFlagBitmap) {
+        this.mFlagBitmap = mFlagBitmap;
+    }
 
-	public boolean intersects(Location location) {
-		double tolerance = 1000;
+    public boolean intersects(Location location) {
+        double tolerance = 1000;
 
-		return (mLocation.distanceTo(location) <= tolerance);
-	}
+        return (mLocation.distanceTo(location) <= tolerance);
+    }
 
-	
-	
-	public void setLocation(Location location) {
-		mLocation = location;
-	}
+    public void setLocation(Location location) {
+        mLocation = location;
+    }
 
-	
-	
-	public Location getLocation() {
-		return mLocation;
-	}
+    public Location getLocation() {
+        return mLocation;
+    }
 
-	
-	
-	@Override
-	public String toString() {
-		return "Place: " + mPlaceName + " Country: " + mCountryName;
+    @Override
+    public String toString() {
+        return "Place: " + mPlaceName + " Country: " + mCountryName;
 
-	}
+    }
 }

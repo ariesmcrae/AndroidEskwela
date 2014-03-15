@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasther.test;
 
 import com.ariesmcrae.eskwela.iwasthere.PlaceViewActivity;
@@ -28,54 +28,53 @@ import com.robotium.solo.*;
 import android.test.ActivityInstrumentationTestCase2;
 
 /** @author aries@ariesmcrae.com */
-public class TestTwoValidLocations extends
-		ActivityInstrumentationTestCase2<PlaceViewActivity> {
-	private Solo solo;
+public class TestTwoValidLocations extends ActivityInstrumentationTestCase2<PlaceViewActivity> {
+    private Solo solo;
 
-	public TestTwoValidLocations() {
-		super(PlaceViewActivity.class);
-	}
+    public TestTwoValidLocations() {
+        super(PlaceViewActivity.class);
+    }
 
-	public void setUp() throws Exception {
-		solo = new Solo(getInstrumentation());
-		getActivity();
-	}
+    public void setUp() throws Exception {
+        solo = new Solo(getInstrumentation());
+        getActivity();
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		solo.finishOpenedActivities();
-	}
+    @Override
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+    }
 
-	public void testRun() {
-		// Wait for activity: 'com.ariesmcrae.eskwela.iwasthere.PlaceViewActivity'
-		solo.waitForActivity(com.ariesmcrae.eskwela.iwasthere.PlaceViewActivity.class,
-				2000);
+    public void testRun() {
+        // Wait for activity:
+        // 'com.ariesmcrae.eskwela.iwasthere.PlaceViewActivity'
+        solo.waitForActivity(com.ariesmcrae.eskwela.iwasthere.PlaceViewActivity.class, 2000);
 
-		// Set default small timeout to 10887 milliseconds
-		Timeout.setSmallTimeout(10887);
+        // Set default small timeout to 10887 milliseconds
+        Timeout.setSmallTimeout(10887);
 
-		// Click on action bar item
-		solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.place_one);
+        // Click on action bar item
+        solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.place_one);
 
-		solo.sleep(2000);
+        solo.sleep(2000);
 
-		// Click on Get New Place
-		solo.clickOnView(solo.getView(com.ariesmcrae.eskwela.iwasthere.R.id.footer));
+        // Click on Get New Place
+        solo.clickOnView(solo.getView(com.ariesmcrae.eskwela.iwasthere.R.id.footer));
 
-		solo.sleep(2000);
+        solo.sleep(2000);
 
-		// Click on action bar item
-		solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.place_two);
+        // Click on action bar item
+        solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.place_two);
 
-		solo.sleep(2000);
+        solo.sleep(2000);
 
-		// Click on Get New Place
-		solo.clickOnView(solo.getView(com.ariesmcrae.eskwela.iwasthere.R.id.footer));
+        // Click on Get New Place
+        solo.clickOnView(solo.getView(com.ariesmcrae.eskwela.iwasthere.R.id.footer));
 
-		solo.sleep(5000);
+        solo.sleep(5000);
 
-		// Click on action bar item
-		solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.print_badges);
+        // Click on action bar item
+        solo.clickOnActionBarItem(com.ariesmcrae.eskwela.iwasthere.R.id.print_badges);
 
-	}
+    }
 }

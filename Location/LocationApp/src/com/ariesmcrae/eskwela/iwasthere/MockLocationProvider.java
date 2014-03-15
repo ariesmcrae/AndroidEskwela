@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasthere;
 
 // Adapted from code found at: 
@@ -34,34 +34,34 @@ import android.os.SystemClock;
 /** @author aries@ariesmcrae.com */
 public class MockLocationProvider {
 
-	private String mProviderName;
-	private LocationManager mLocationManager;
+    private String mProviderName;
+    private LocationManager mLocationManager;
 
-	private static float mockAccuracy = 5;
+    private static float mockAccuracy = 5;
 
-	public MockLocationProvider(String name, Context ctx) {
-		this.mProviderName = name;
+    public MockLocationProvider(String name, Context ctx) {
+        this.mProviderName = name;
 
-		mLocationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-		mLocationManager.addTestProvider(mProviderName, false, false, false, false, true, true, true, 0, 5);
-		mLocationManager.setTestProviderEnabled(mProviderName, true);
-	}
+        mLocationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.addTestProvider(mProviderName, false, false, false, false, true, true, true, 0, 5);
+        mLocationManager.setTestProviderEnabled(mProviderName, true);
+    }
 
-	public void pushLocation(double lat, double lon) {
+    public void pushLocation(double lat, double lon) {
 
-		Location mockLocation = new Location(mProviderName);
-		mockLocation.setLatitude(lat);
-		mockLocation.setLongitude(lon);
-		mockLocation.setAltitude(0);
-		mockLocation.setTime(System.currentTimeMillis());
-		mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-		mockLocation.setAccuracy(mockAccuracy);
+        Location mockLocation = new Location(mProviderName);
+        mockLocation.setLatitude(lat);
+        mockLocation.setLongitude(lon);
+        mockLocation.setAltitude(0);
+        mockLocation.setTime(System.currentTimeMillis());
+        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+        mockLocation.setAccuracy(mockAccuracy);
 
-		mLocationManager.setTestProviderLocation(mProviderName, mockLocation);
+        mLocationManager.setTestProviderLocation(mProviderName, mockLocation);
 
-	}
+    }
 
-	public void shutdown() {
-		mLocationManager.removeTestProvider(mProviderName);
-	}
+    public void shutdown() {
+        mLocationManager.removeTestProvider(mProviderName);
+    }
 }

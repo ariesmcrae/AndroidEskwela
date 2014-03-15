@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasthere;
 
 import java.util.ArrayList;
@@ -38,103 +38,83 @@ import com.ariesmcrae.eskwela.iwasthere.R;
 /** @author aries@ariesmcrae.com */
 public class PlaceViewAdapter extends BaseAdapter {
 
-	private ArrayList<PlaceRecord> list = new ArrayList<PlaceRecord>();
-	private static LayoutInflater inflater = null;
-	private Context mContext;
+    private ArrayList<PlaceRecord> list = new ArrayList<PlaceRecord>();
+    private static LayoutInflater inflater = null;
+    private Context mContext;
 
-	
-	
-	public PlaceViewAdapter(Context context) {
-		mContext = context;
-		inflater = LayoutInflater.from(mContext);
-	}
+    public PlaceViewAdapter(Context context) {
+        mContext = context;
+        inflater = LayoutInflater.from(mContext);
+    }
 
-	
-	
-	public int getCount() {
-		return list.size();
-	}
+    public int getCount() {
+        return list.size();
+    }
 
-	
-	
-	public Object getItem(int position) {
-		return position;
-	}
+    public Object getItem(int position) {
+        return position;
+    }
 
-	
-	
-	public long getItemId(int position) {
-		return position;
-	}
+    public long getItemId(int position) {
+        return position;
+    }
 
-	
-	
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View newView = convertView;
-		
-		// ViewHolder is a design pattern to avoid having to repeatedly call findViewById() during scroll.
-		// ViewHolder object stores each of the component views inside the tag field of the Layout, 
-		// so you can immediately access them without the need to look them up repeatedly.
-		ViewHolder holder;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View newView = convertView;
 
-		PlaceRecord curr = list.get(position);
+        // ViewHolder is a design pattern to avoid having to repeatedly call findViewById() during scroll.
+        // ViewHolder object stores each of the component views inside the tag field of the Layout,
+        // so you can immediately access them without the need to look them up repeatedly.
+        ViewHolder holder;
 
-		if (convertView == null) {
-			holder = new ViewHolder();
-			newView = inflater.inflate(R.layout.place_badge_view, null);
-			holder.flag = (ImageView) newView.findViewById(R.id.flag);
-			holder.country = (TextView) newView.findViewById(R.id.country_name);
-			holder.place = (TextView) newView.findViewById(R.id.place_name);
-			newView.setTag(holder);
+        PlaceRecord curr = list.get(position);
 
-		} else {
-			holder = (ViewHolder) newView.getTag();
-		}
+        if (convertView == null) {
+            holder = new ViewHolder();
+            newView = inflater.inflate(R.layout.place_badge_view, null);
+            holder.flag = (ImageView) newView.findViewById(R.id.flag);
+            holder.country = (TextView) newView.findViewById(R.id.country_name);
+            holder.place = (TextView) newView.findViewById(R.id.place_name);
+            newView.setTag(holder);
 
-		holder.flag.setImageBitmap(curr.getFlagBitmap());
-		holder.country.setText("Country: " + curr.getCountryName());
-		holder.place.setText("Place: " + curr.getPlace());
+        } else {
+            holder = (ViewHolder) newView.getTag();
+        }
 
-		return newView;
-	}
+        holder.flag.setImageBitmap(curr.getFlagBitmap());
+        holder.country.setText("Country: " + curr.getCountryName());
+        holder.place.setText("Place: " + curr.getPlace());
 
-	
-	
-	static class ViewHolder {
-		ImageView flag;
-		TextView country;
-		TextView place;
+        return newView;
+    }
 
-	}
-	
-	
+    static class ViewHolder {
+        ImageView flag;
+        TextView country;
+        TextView place;
 
-	public boolean intersects(Location location) {
-		for (PlaceRecord item : list) {
-			if (item.intersects(location)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    }
 
-	
-	
-	public void add(PlaceRecord listItem) {
-		list.add(listItem);
-		notifyDataSetChanged();
-	}
+    public boolean intersects(Location location) {
+        for (PlaceRecord item : list) {
+            if (item.intersects(location)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	
-	
-	public ArrayList<PlaceRecord> getList() {
-		return list;
-	}
+    public void add(PlaceRecord listItem) {
+        list.add(listItem);
+        notifyDataSetChanged();
+    }
 
-	
-	
-	public void removeAllViews() {
-		list.clear();
-		this.notifyDataSetChanged();
-	}
+    public ArrayList<PlaceRecord> getList() {
+        return list;
+    }
+
+    public void removeAllViews() {
+        list.clear();
+        this.notifyDataSetChanged();
+    }
 }

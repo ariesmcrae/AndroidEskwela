@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-**/
+ **/
 package com.ariesmcrae.eskwela.iwasthere;
 
 import java.io.BufferedReader;
@@ -51,192 +51,175 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.ariesmcrae.eskwela.iwasthere.R;
 
-/** 
+/**
  * This is an AsyncTask. It performs work outside the main thread.
  * 
- * @author aries@ariesmcrae.com */
+ * @author aries@ariesmcrae.com
+ */
 public class PlaceDownloaderTask extends AsyncTask<Location, Void, PlaceRecord> {
 
-	private static String USERNAME = "iwasthere";
+    private static String USERNAME = "iwasthere";
 
-	private HttpURLConnection mHttpUrl;
-	
-	// Add WeakReference to allow this AsyncTask to be garbage collected.
-	// Without WeakReference, PlaceViewActivity will maintain a reference to it.
-	private WeakReference<PlaceViewActivity> mParent; 
+    private HttpURLConnection mHttpUrl;
 
-	
-	
-	public PlaceDownloaderTask(PlaceViewActivity parent) {
-		super();
-		mParent = new WeakReference<PlaceViewActivity>(parent);
-	}
+    // Add WeakReference to allow this AsyncTask to be garbage collected.
+    // Without WeakReference, PlaceViewActivity will maintain a reference to it.
+    private WeakReference<PlaceViewActivity> mParent;
 
-	
-	
-	@Override
-	protected PlaceRecord doInBackground(Location... location) {
-		PlaceRecord place = getPlaceFromURL(generateURL(USERNAME, location[0]));
+    public PlaceDownloaderTask(PlaceViewActivity parent) {
+        super();
+        mParent = new WeakReference<PlaceViewActivity>(parent);
+    }
 
-		if (!"".equals(place.getCountryName())) {
-			place.setLocation(location[0]);
-			place.setFlagBitmap(getFlagFromURL(place.getFlagUrl()));
-		} else {
-			place = null;
-		}
+    @Override
+    protected PlaceRecord doInBackground(Location... location) {
+        PlaceRecord place = getPlaceFromURL(generateURL(USERNAME, location[0]));
 
-		return place;
-	}
-	
-	
+        if (!"".equals(place.getCountryName())) {
+            place.setLocation(location[0]);
+            place.setFlagBitmap(getFlagFromURL(place.getFlagUrl()));
+        } else {
+            place = null;
+        }
 
-	@Override
-	protected void onPostExecute(PlaceRecord result) {
-		if (result != null && mParent.get() != null) {
-			mParent.get().addNewPlace(result);
-		}
-	}
+        return place;
+    }
 
-	
-	
-	private PlaceRecord getPlaceFromURL(String... params) {
-		String result = null;
-		BufferedReader in = null;
+    @Override
+    protected void onPostExecute(PlaceRecord result) {
+        if (result != null && mParent.get() != null) {
+            mParent.get().addNewPlace(result);
+        }
+    }
 
-		try {
-			URL url = new URL(params[0]);
-			mHttpUrl = (HttpURLConnection) url.openConnection();
-			in = new BufferedReader(new InputStreamReader(mHttpUrl.getInputStream()));
+    private PlaceRecord getPlaceFromURL(String... params) {
+        String result = null;
+        BufferedReader in = null;
 
-			StringBuffer sb = new StringBuffer("");
-			String line = "";
-			
-			while ((line = in.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			
-			result = sb.toString();
+        try {
+            URL url = new URL(params[0]);
+            mHttpUrl = (HttpURLConnection) url.openConnection();
+            in = new BufferedReader(new InputStreamReader(mHttpUrl.getInputStream()));
 
-		} catch (MalformedURLException e) {
+            StringBuffer sb = new StringBuffer("");
+            String line = "";
 
-		} catch (IOException e) {
+            while ((line = in.readLine()) != null) {
+                sb.append(line + "\n");
+            }
 
-		} finally {
-			try {
-				if (null != in) {
-					in.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			mHttpUrl.disconnect();
-		}
+            result = sb.toString();
 
-		return placeDataFromXml(result);
-	}
+        } catch (MalformedURLException e) {
 
-	
-	
-	private Bitmap getFlagFromURL(String flagUrl) {
-		InputStream in = null;
+        } catch (IOException e) {
 
-		try {
-			URL url = new URL(flagUrl);
-			mHttpUrl = (HttpURLConnection) url.openConnection();
-			in = mHttpUrl.getInputStream();
+        } finally {
+            try {
+                if (null != in) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mHttpUrl.disconnect();
+        }
 
-			return BitmapFactory.decodeStream(in);
+        return placeDataFromXml(result);
+    }
 
-		} catch (MalformedURLException e) {
-			Log.e("DEBUG", e.toString());
-			
-		} catch (IOException e) {
-			Log.e("DEBUG", e.toString());
-			
-		} finally {
-			try {
-				if (null != in) {
-					in.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			mHttpUrl.disconnect();
-		}
+    private Bitmap getFlagFromURL(String flagUrl) {
+        InputStream in = null;
 
-		return BitmapFactory.decodeResource(mParent.get().getResources(), R.drawable.stub);
-	}
+        try {
+            URL url = new URL(flagUrl);
+            mHttpUrl = (HttpURLConnection) url.openConnection();
+            in = mHttpUrl.getInputStream();
 
-	
-	
-	
-	private static PlaceRecord placeDataFromXml(String xmlString) {
-		DocumentBuilder builder;
-		String countryName = "";
-		String countryCode = "";
-		String placeName = "";
-		String elevation = "";
+            return BitmapFactory.decodeStream(in);
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        } catch (MalformedURLException e) {
+            Log.e("DEBUG", e.toString());
 
-		try {
-			builder = factory.newDocumentBuilder();
-			Document document = builder.parse(new InputSource(new StringReader(xmlString)));
-			NodeList list = document.getDocumentElement().getChildNodes();
-			
-			for (int i = 0; i < list.getLength(); i++) {
-				Node curr = list.item(i);
+        } catch (IOException e) {
+            Log.e("DEBUG", e.toString());
 
-				NodeList list2 = curr.getChildNodes();
+        } finally {
+            try {
+                if (null != in) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-				for (int j = 0; j < list2.getLength(); j++) {
-					Node curr2 = list2.item(j);
-					
-					if (curr2.getNodeName() != null) {
-						if (curr2.getNodeName().equals("countryName")) {
-							countryName = curr2.getTextContent();
-							
-						} else if (curr2.getNodeName().equals("countryCode")) {
-							countryCode = curr2.getTextContent();
-							
-						} else if (curr2.getNodeName().equals("name")) {
-							placeName = curr2.getTextContent();
-							
-						} else if (curr2.getNodeName().equals("elevation")) {
-							elevation = curr2.getTextContent();
-						}
-					}
-				}
-			}
-		} catch (DOMException e) {
-			e.printStackTrace();
-			
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			
-		} catch (SAXException e) {
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            mHttpUrl.disconnect();
+        }
 
-		return new PlaceRecord(generateFlagURL(countryCode.toLowerCase()), countryName, placeName, elevation);
-	}
+        return BitmapFactory.decodeResource(mParent.get().getResources(), R.drawable.stub);
+    }
 
-	
-	
-	private static String generateURL(String username, Location location) {
-		return "http://www.geonames.org/findNearbyPlaceName?username=" + username 
-				+ "&style=full&lat=" + location.getLatitude()
-				+ "&lng=" + location.getLongitude();
-	}
+    private static PlaceRecord placeDataFromXml(String xmlString) {
+        DocumentBuilder builder;
+        String countryName = "";
+        String countryCode = "";
+        String placeName = "";
+        String elevation = "";
 
-	
-	
-	private static String generateFlagURL(String countryCode) {
-		return "http://www.geonames.org/flags/x/" + countryCode + ".gif";
-	}
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        try {
+            builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new InputSource(new StringReader(xmlString)));
+            NodeList list = document.getDocumentElement().getChildNodes();
+
+            for (int i = 0; i < list.getLength(); i++) {
+                Node curr = list.item(i);
+
+                NodeList list2 = curr.getChildNodes();
+
+                for (int j = 0; j < list2.getLength(); j++) {
+                    Node curr2 = list2.item(j);
+
+                    if (curr2.getNodeName() != null) {
+                        if (curr2.getNodeName().equals("countryName")) {
+                            countryName = curr2.getTextContent();
+
+                        } else if (curr2.getNodeName().equals("countryCode")) {
+                            countryCode = curr2.getTextContent();
+
+                        } else if (curr2.getNodeName().equals("name")) {
+                            placeName = curr2.getTextContent();
+
+                        } else if (curr2.getNodeName().equals("elevation")) {
+                            elevation = curr2.getTextContent();
+                        }
+                    }
+                }
+            }
+        } catch (DOMException e) {
+            e.printStackTrace();
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+
+        } catch (SAXException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new PlaceRecord(generateFlagURL(countryCode.toLowerCase()), countryName, placeName, elevation);
+    }
+
+    private static String generateURL(String username, Location location) {
+        return "http://www.geonames.org/findNearbyPlaceName?username=" + username + "&style=full&lat=" + location.getLatitude()
+                + "&lng=" + location.getLongitude();
+    }
+
+    private static String generateFlagURL(String countryCode) {
+        return "http://www.geonames.org/flags/x/" + countryCode + ".gif";
+    }
 
 }
